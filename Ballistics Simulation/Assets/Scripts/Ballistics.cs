@@ -24,8 +24,6 @@ public class Ballistics : MonoBehaviour
     private Rigidbody _projectile;
 
     private float _dragForce = 0;
-    //private float _windForce = 0;
-    //private float _thrustForce = 0;
 
     private void Start()
     {
