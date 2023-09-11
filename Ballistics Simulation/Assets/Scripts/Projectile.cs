@@ -1,13 +1,16 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Projectile", menuName = "ScriptableObjects/CustomProjectile", order = 1)]
-public class Projectile : ScriptableObject
+public class Projectile : MonoBehaviour
 {
-    [Header("Ballistics")]
-    public float Mass;
-    public float Area;
-    public float Drag;
-    public float Density;
+    public ProjectileProperties ProjectileProperties;
 
+    private void Start()
+    {
+        
+    }
 
+    private void FixedUpdate()
+    {
+        
+    }
 }

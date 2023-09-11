@@ -2,13 +2,18 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    [Header("Ballistics")]
+    public BallisticSettings ballisticSettings;
+
+    [Header("Projectile")]
     public GameObject ProjectileObject;
     public Transform ProjectileSpawnPoint;
 
+    private void Start()
+    {
+        ballisticSettings = GetComponent<BallisticSettings>();
+    }
 
-    public BallisticSettings ballisticSettings;
-
-    
     public void Shot()
     {
         GameObject Projectile = Instantiate(ProjectileObject, ProjectileSpawnPoint);
@@ -21,6 +26,4 @@ public class Weapon : MonoBehaviour
             Shot();
         }
     }
-
-    
 }

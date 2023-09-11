@@ -399,6 +399,8 @@ GameObject:
   - component: {fileID: 918245469}
   - component: {fileID: 918245468}
   - component: {fileID: 918245472}
+  - component: {fileID: 918245474}
+  - component: {fileID: 918245473}
   m_Layer: 0
   m_Name: Weapon
   m_TagString: Untagged
@@ -498,8 +500,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd950017f7cf6448a0bb8dcf0d6b45c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ballisticSettings: {fileID: 918245474}
   ProjectileObject: {fileID: 0}
   ProjectileSpawnPoint: {fileID: 1108704817}
+--- !u!114 &918245473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 918245467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f310b55584884a40ad104c381f75983, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectileSpawnPoint: {fileID: 1108704817}
+--- !u!114 &918245474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 918245467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de1e3557bffdfdf40b12b86c6a79e499, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useGravity: 1
+  useDrag: 0
+  useWindForce: 0
+  useThrust: 0
+  windDirection: {x: 0, y: 0, z: 0}
+  thrustDirection: {x: 0, y: 0, z: 0}
+  projectileForce: 0
+  AtmosphereTemperature: 0
+  AtmospherePressure: 0
+  AtmosphereDensity: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
