@@ -13,24 +13,28 @@ public class BallisticTrajectory : MonoBehaviour
 
     }
 
-    private void DrawBasisVectors()
+    private void DrawBaseVectors()
     {
         forwardBasis = projectileSpawnPoint.position + projectileSpawnPoint.up;
-        rightBasis = projectileSpawnPoint.position + projectileSpawnPoint.right;
 
         upBasis = projectileSpawnPoint.up;
         upBasis.y = 0;
         upBasis.Normalize();
+        
+        rightBasis = Vector3.Cross(projectileSpawnPoint.up, upBasis);
+        rightBasis.Normalize();
+        
+
         upBasis = projectileSpawnPoint.position + upBasis;
+        rightBasis = projectileSpawnPoint.position + rightBasis;
 
-
-        Debug.DrawLine(projectileSpawnPoint.position, forwardBasis, Color.blue);
+        Debug.DrawLine(projectileSpawnPoint.position, forwardBasis, Color.green);
         Debug.DrawLine(projectileSpawnPoint.position, rightBasis, Color.red);
-        Debug.DrawLine(projectileSpawnPoint.position, upBasis, Color.green);
+        Debug.DrawLine(projectileSpawnPoint.position, upBasis, Color.blue);
     }
 
     private void FixedUpdate()
     {
-        DrawBasisVectors();
+        DrawBaseVectors();
     }
 }
