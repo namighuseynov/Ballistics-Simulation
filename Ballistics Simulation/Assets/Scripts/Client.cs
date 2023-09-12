@@ -16,7 +16,8 @@ public class Client : MonoBehaviour
 
     public void Shot()
     {
-        GameObject Projectile = Instantiate(ProjectileObject, ProjectileSpawnPoint);
+        GameObject Projectile = Instantiate(ProjectileObject);
+        Projectile.transform.position = ProjectileSpawnPoint.position;
     }
 
     private void Update()

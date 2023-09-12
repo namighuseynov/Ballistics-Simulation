@@ -4,8 +4,15 @@ using UnityEngine;
 public class ProjectileProperties : ScriptableObject
 {
     [Header("Ballistics")]
-    public float Mass;
-    public float Area;
-    public float Drag;
-    public float Density;
+    public float Mass = 1;
+    public float Area = 0.5f;
+    public float Drag = 0.5f;
+    public float Density = 1.25f;
+    public float startingSpeed = 10f;
+
+    [Header("Time Update")]
+    public float deltaTime = 0.5f;
+
+    [Header("Projectile")]
+    public float liveTime = 15f;
 }
