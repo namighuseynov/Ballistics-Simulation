@@ -4,12 +4,14 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     public ProjectileProperties ProjectileProperties;
+    public BallisticSettings BallisticSettings;
 
     private Rigidbody rb;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        BallisticSettings = GetComponent<BallisticSettings>();
         Destroy(gameObject, ProjectileProperties.liveTime);
     }
 

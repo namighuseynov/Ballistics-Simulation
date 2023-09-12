@@ -8,7 +8,7 @@ public class ProjectileProperties : ScriptableObject
     public float Area = 0.5f;
     public float Drag = 0.5f;
     public float Density = 1.25f;
-    public float startingSpeed = 10f;
+    public float StartingSpeed = 10f; 
 
     [Header("Time Update")]
     public float deltaTime = 0.5f;
