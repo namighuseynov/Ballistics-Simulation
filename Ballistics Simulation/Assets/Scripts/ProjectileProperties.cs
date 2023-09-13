@@ -15,4 +15,5 @@ public class ProjectileProperties : ScriptableObject
 
     [Header("Projectile")]
     public float liveTime = 15f;
+    public ProjectileUpdateMode updateMode;
 }
