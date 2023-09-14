@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8090078158409524631}
   - component: {fileID: 8090078158409524626}
   - component: {fileID: 8090078158409524627}
+  - component: {fileID: 5591245404538508714}
   m_Layer: 0
   m_Name: Projectile
   m_TagString: Untagged
@@ -128,4 +129,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ProjectileProperties: {fileID: 11400000, guid: acaaacfcd837ac54488d59f6442435d8, type: 2}
-  BallisticSettings: {fileID: 0}
+  BallisticSettings: {fileID: 5591245404538508714}
+--- !u!114 &5591245404538508714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8090078158409524628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de1e3557bffdfdf40b12b86c6a79e499, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useGravity: 1
+  useDrag: 1
+  useWindForce: 0
+  useThrust: 0
+  windDirection: {x: 0, y: 0, z: 0}
+  thrustDirection: {x: 0, y: 0, z: 0}
+  projectileForce: 0
+  AtmosphereTemperature: 0
+  AtmospherePressure: 0
+  AtmosphereDensity: 1.25
