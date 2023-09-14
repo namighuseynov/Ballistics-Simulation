@@ -18,6 +18,7 @@ public class Client : MonoBehaviour
     {
         GameObject Projectile = Instantiate(ProjectileObject);
         Projectile.transform.position = ProjectileSpawnPoint.position;
+        Projectile.transform.rotation = ProjectileSpawnPoint.rotation;
     }
 
     private void Update()

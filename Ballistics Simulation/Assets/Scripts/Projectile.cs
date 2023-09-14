@@ -7,7 +7,7 @@ public class Projectile : MonoBehaviour
     public BallisticSettings BallisticSettings;
 
     private Rigidbody rb;
-
+    private float angle = 0;
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -17,7 +17,7 @@ public class Projectile : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log(GetHeight());
+        DrawBaseVectors();
     }
 
     private float GetHeight()
@@ -38,5 +38,22 @@ public class Projectile : MonoBehaviour
     private float CalculateGravity()
     {
         return (Physics.gravity.y * ProjectileProperties.Mass);
+    }
+
+    private float CalculateAngle()
+    {
+        return angle;
+    }
+
+    private void DrawBaseVectors()
+    {
+        Vector3 Axis = transform.position;
+        Vector3 xBasis = transform.up;
+        Vector3 yBasis = transform.up;
+        yBasis.y = 0f;
+        yBasis.Normalize();
+        Debug.DrawLine(Axis, Axis + xBasis, Color.green);
+        Debug.DrawLine(Axis, Axis + yBasis, Color.blue);
+        angle = Vector3.Angle(xBasis, yBasis);
     }
 }
