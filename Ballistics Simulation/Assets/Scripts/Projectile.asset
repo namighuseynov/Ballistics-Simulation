@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4154ba8c2ed8f742b0b77e7bac85fec, type: 3}
   m_Name: Projectile
   m_EditorClassIdentifier: 
-  Mass: 1
-  Area: 0.5
+  Mass: 4.5
+  Area: 0.25
   Drag: 0.5
   Density: 1.25
-  StartingSpeed: 10
+  StartingSpeed: 120
   deltaTime: 0.5
   liveTime: 15
   updateMode: 0

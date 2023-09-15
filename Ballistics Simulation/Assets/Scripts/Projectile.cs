@@ -6,13 +6,15 @@ public class Projectile : MonoBehaviour
     public ProjectileProperties ProjectileProperties;
     public BallisticSettings BallisticSettings;
 
+    public bool ShowForceVectors = true;
     private Rigidbody rb;
     private float angle = 0;
     
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        BallisticSettings = GetComponent<BallisticSettings>();
+        rb.useGravity = false;
+        BallisticSettings = GameObject.Find("Weapon").GetComponent<BallisticSettings>();
         Destroy(gameObject, ProjectileProperties.liveTime);
         Vector3 velocityDirection = transform.up;
         rb.velocity = ProjectileProperties.StartingSpeed * velocityDirection;
@@ -21,7 +23,11 @@ public class Projectile : MonoBehaviour
     private void FixedUpdate()
     {
         DrawBaseVectors();
-        CalculateDrag();
+
+        if (ShowForceVectors) { DrawMoveVector(); }
+
+        if (BallisticSettings.useGravity) { CalculateGravity(); }
+        if (BallisticSettings.useDrag) { CalculateDrag(); }
     }
 
     private float GetSpeed()
@@ -34,25 +40,25 @@ public class Projectile : MonoBehaviour
         return transform.position.y;
     }
 
-    private float CalculateDrag()
+    private void CalculateDrag()
     {
-        Vector3 dragDirection = -transform.up;
+        Vector3 dragDirection = -rb.velocity.normalized;
         Vector3 drag = dragDirection * ProjectileProperties.Drag * BallisticSettings.AtmosphereDensity 
-                        * Mathf.Pow(GetSpeed(), 2) * ProjectileProperties.Area * Mathf.Sin(angle * Mathf.PI / 180);
-
+                        * Mathf.Pow(GetSpeed(), 2) * ProjectileProperties.Area;
         rb.AddForce(drag);
-        Debug.Log(drag);
-        return 0f;
+        if (ShowForceVectors) { Debug.DrawLine(transform.position, dragDirection + transform.position, Color.gray); }
     }
 
-    private float CalculateWind()
+    private void CalculateWind()
     {
-        return 0f;
+        return;
     }
 
-    private float CalculateGravity()
+    private void CalculateGravity()
     {
-        return (Physics.gravity.y * ProjectileProperties.Mass);
+        Vector3 gravity = Physics.gravity*ProjectileProperties.Mass;
+        rb.AddForce(gravity);
+        if (ShowForceVectors) { Debug.DrawLine(transform.position, transform.position + gravity, Color.red); }
     }
 
     private float CalculateAngle()
@@ -70,5 +76,10 @@ public class Projectile : MonoBehaviour
         Debug.DrawLine(Axis, Axis + xBasis, Color.green);
         Debug.DrawLine(Axis, Axis + yBasis, Color.blue);
         angle = Vector3.Angle(xBasis, yBasis);
+    }
+    private void DrawMoveVector()
+    {
+        Vector3 moveDirection = transform.position + rb.velocity;
+        Debug.DrawLine(transform.position, moveDirection, Color.black);
     }
 }

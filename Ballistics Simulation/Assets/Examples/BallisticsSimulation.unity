@@ -519,5 +519,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Weapon
       objectReference: {fileID: 0}
+    - target: {fileID: 5831437166207273780, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
+      propertyPath: useDrag
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5831437166207273780, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
+      propertyPath: useGravity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5831437166207273780, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
+      propertyPath: AtmosphereDensity
+      value: 1.25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
