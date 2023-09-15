@@ -3,12 +3,12 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Projectile : MonoBehaviour
 {
-    public ProjectileProperties ProjectileProperties;
-    public BallisticSettings BallisticSettings;
+    public ProjectileProperties     ProjectileProperties;
+    public BallisticSettings        BallisticSettings;
 
-    public bool ShowForceVectors = true;
-    private Rigidbody rb;
-    private float angle = 0;
+    public bool                     ShowForceVectors = true;
+    private Rigidbody               rb;
+    private float                   angle = 0;
     
     private void Start()
     {
@@ -25,7 +25,6 @@ public class Projectile : MonoBehaviour
         DrawBaseVectors();
 
         if (ShowForceVectors) { DrawMoveVector(); }
-
         if (BallisticSettings.useGravity) { CalculateGravity(); }
         if (BallisticSettings.useDrag) { CalculateDrag(); }
     }
@@ -43,7 +42,7 @@ public class Projectile : MonoBehaviour
     private void CalculateDrag()
     {
         Vector3 dragDirection = -rb.velocity.normalized;
-        Vector3 drag = dragDirection * ProjectileProperties.Drag * BallisticSettings.AtmosphereDensity 
+        Vector3 drag = dragDirection * ProjectileProperties.dragCoefficient * BallisticSettings.AtmosphereDensity 
                         * Mathf.Pow(GetSpeed(), 2) * ProjectileProperties.Area;
         rb.AddForce(drag);
         if (ShowForceVectors) { Debug.DrawLine(transform.position, dragDirection + transform.position, Color.gray); }
@@ -56,7 +55,7 @@ public class Projectile : MonoBehaviour
 
     private void CalculateGravity()
     {
-        Vector3 gravity = Physics.gravity*ProjectileProperties.Mass;
+        Vector3 gravity = Physics.gravity*ProjectileProperties.Weight;
         rb.AddForce(gravity);
         if (ShowForceVectors) { Debug.DrawLine(transform.position, transform.position + gravity, Color.red); }
     }

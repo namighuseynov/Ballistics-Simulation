@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Mass: 4.5
   Area: 0.25
-  Drag: 0.5
+  Drag: 1
   Density: 1.25
   StartingSpeed: 120
   deltaTime: 0.5
-  liveTime: 15
+  liveTime: 40
   updateMode: 0
