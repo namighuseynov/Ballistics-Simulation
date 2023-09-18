@@ -162,3 +162,4 @@ MonoBehaviour:
   ProjectileProperties: {fileID: 11400000, guid: acaaacfcd837ac54488d59f6442435d8, type: 2}
   BallisticSettings: {fileID: 0}
   ShowForceVectors: 1
+  CenterOfMass: {fileID: 3947241019121712769}
