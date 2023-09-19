@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 8090078158409524631}
   - component: {fileID: 8090078158409524626}
   - component: {fileID: 8090078158409524627}
+  - component: {fileID: 7849543334625053130}
   m_Layer: 0
   m_Name: Projectile
   m_TagString: Untagged
@@ -161,5 +162,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ProjectileProperties: {fileID: 11400000, guid: acaaacfcd837ac54488d59f6442435d8, type: 2}
   BallisticSettings: {fileID: 0}
-  ShowForceVectors: 1
   CenterOfMass: {fileID: 3947241019121712769}
+  Gravity: {x: 0, y: 0, z: 0}
+  Drag: {x: 0, y: 0, z: 0}
+  Wind: {x: 0, y: 0, z: 0}
+--- !u!114 &7849543334625053130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8090078158409524628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a898eb41580d5b4c941816039258de6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
