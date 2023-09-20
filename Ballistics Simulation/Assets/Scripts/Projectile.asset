@@ -16,7 +16,7 @@ MonoBehaviour:
   Area: 0.0056
   dragCoefficient: 5
   Density: 1.25
-  StartingSpeed: 30
+  StartingSpeed: 110
   deltaTime: 0.5
   liveTime: 20
   updateMode: 0

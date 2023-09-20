@@ -489,19 +489,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273737, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9089241
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273737, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273737, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273737, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.41696158
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273737, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -513,7 +513,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273737, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -49.286
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273741, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: m_Name
@@ -529,15 +529,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273780, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: AtmosphereDensity
-      value: 1.225
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273780, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: AtmospherePressure
-      value: 101.325
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273780, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: AtmosphereTemperature
-      value: 273.15
+      value: 288.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}

@@ -7,23 +7,28 @@ public class Projectile : MonoBehaviour
     public BallisticSettings        BallisticSettings;
 
     private Rigidbody               body;
-    public Transform CenterOfMass;
+    public Transform                CenterOfMass;
 
-    public Vector3 Gravity = Vector3.zero;
-    public Vector3 Drag = Vector3.zero;
-    public Vector3 Wind = Vector3.zero;
+    public Vector3                  Gravity =        Vector3.zero;
+    public Vector3                  Drag =           Vector3.zero;
+    public Vector3                  Wind =           Vector3.zero;
 
     //Projectile properies
-    private float area;
-    private float weight;
-    private float dragCoefficent;
-    private float startingSpeed;
+    private float                   area;
+    private float                   weight;
+    private float                   dragCoefficent;
+    private float                   startingSpeed;
 
     //Ballistic settings
-    private bool useGravity;
-    private bool useDrag;
-    private bool useWind;
-    private float atmoshereDensity;
+    private const float             L =             -0.0065f;
+    private const float             R =              8.31447f;
+    private const float             M =              0.029f;
+
+    private bool                    useGravity;
+    private bool                    useDrag;
+    private bool                    useWind;
+    private float                   atmoshereTemperature;
+    private float                   atmoshereDensity;
 
 
     private void Start()
@@ -38,7 +43,9 @@ public class Projectile : MonoBehaviour
             weight = ProjectileProperties.Weight;
             dragCoefficent = ProjectileProperties.dragCoefficient;
             startingSpeed = ProjectileProperties.StartingSpeed;
+
             atmoshereDensity = BallisticSettings.AtmosphereDensity;
+            atmoshereTemperature = BallisticSettings.AtmosphereTemperature;
             useGravity = BallisticSettings.useGravity;
             useDrag = BallisticSettings.useDrag;
             useWind = BallisticSettings.useWindForce;
@@ -54,6 +61,9 @@ public class Projectile : MonoBehaviour
 
         if (useGravity) { CalculateGravity(); }
         if (useDrag) { CalculateDrag(); }
+
+        Debug.Log(GetDensity());
+        
     }
 
     private void CalculateGravity()
@@ -68,7 +78,30 @@ public class Projectile : MonoBehaviour
         Drag = dragDirection * dragCoefficent * atmoshereDensity
                         * Mathf.Pow(GetSpeed(), 2) * area;
         body.AddForce(Drag);
-        Debug.Log(Drag);
+
+    }
+
+    private float GetTemperature()
+    {
+        return (atmoshereTemperature + transform.position.y * L);
+    }
+
+    private float GetPressure()
+    {
+        //float s_pressure = R * atmoshereTemperature / 22.4f;
+        float power = (-Mathf.Abs(-Physics.gravity.y) * M) / (R * L);
+
+        float var = 1 + (L * transform.position.y / atmoshereTemperature);
+        float pressure = 101325f * Mathf.Pow(var, power);
+        //float pressure2 = 101325f * Mathf.Exp((-M * Mathf.Abs(Physics.gravity.y)*transform.position.y)/(R*GetTemperature()));
+        return pressure;
+    }
+
+    private float GetDensity()
+    {
+        float density = (GetPressure() * M) / (R * GetTemperature());
+        atmoshereDensity = density;
+        return density;
     }
 
     private float GetSpeed()
