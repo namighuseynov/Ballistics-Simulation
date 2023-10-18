@@ -58,11 +58,10 @@ public class Projectile : MonoBehaviour
     private void FixedUpdate()
     {
         body.useGravity = false;
-
         if (useGravity) { CalculateGravity(); }
         if (useDrag) { CalculateDrag(); }
 
-        Debug.Log(GetDensity());
+        GetDensity();
         
     }
 
@@ -107,5 +106,14 @@ public class Projectile : MonoBehaviour
     private float GetSpeed()
     {
         return body.velocity.magnitude;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Floor")
+        {
+            Destroy(this.gameObject);
+        }
+        
     }
 }

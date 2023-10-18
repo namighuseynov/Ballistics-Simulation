@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 451528209}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -481,7 +481,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273737, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273737, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -489,7 +489,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273737, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273737, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: m_LocalRotation.x
@@ -501,7 +501,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273737, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273737, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -513,7 +513,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273737, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5831437166207273738, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5831437166207273741, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
       propertyPath: m_Name
@@ -539,5 +543,9 @@ PrefabInstance:
       propertyPath: AtmosphereTemperature
       value: 288.2
       objectReference: {fileID: 0}
+    - target: {fileID: 5831437166207273782, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
+      propertyPath: ProjectileObject
+      value: 
+      objectReference: {fileID: 1853104297891856670, guid: 821865c5420dda4488345a6f7c95ab96, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 589b5ac6d3da09e498245d360e9210d2, type: 3}
