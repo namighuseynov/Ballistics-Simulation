@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Client : MonoBehaviour
+public class WeaponController : MonoBehaviour
 {
     [Header("Ballistics")]
     public BallisticSettings ballisticSettings;

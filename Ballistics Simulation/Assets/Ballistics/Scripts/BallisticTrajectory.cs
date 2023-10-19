@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BallisticTrajectory : MonoBehaviour
 {
-    [SerializeField] private Transform projectileSpawnPoint;
+    private Transform projectileSpawnPoint;
 
     private Vector3 forwardBasis = Vector3.zero;
     private Vector3 rightBasis = Vector3.zero;
@@ -10,7 +10,7 @@ public class BallisticTrajectory : MonoBehaviour
 
     public void DrawBallisticTrajectory(int corners, int[] xCoords, int[] yCoords)
     {
-
+        projectileSpawnPoint = GetComponent<WeaponController>().ProjectileSpawnPoint;
     }
 
     private void DrawBaseVectors()

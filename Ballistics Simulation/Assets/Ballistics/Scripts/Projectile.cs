@@ -36,7 +36,7 @@ public class Projectile : MonoBehaviour
         body = GetComponent<Rigidbody>();
         if (body != null && ProjectileProperties != null)
         {
-            BallisticSettings = GameObject.Find("Weapon").GetComponent<BallisticSettings>();
+            BallisticSettings = GameObject.FindGameObjectWithTag("Weapon").GetComponent<BallisticSettings>();
             Destroy(gameObject, ProjectileProperties.liveTime);
 
             area = ProjectileProperties.Area;
@@ -49,8 +49,22 @@ public class Projectile : MonoBehaviour
             useGravity = BallisticSettings.useGravity;
             useDrag = BallisticSettings.useDrag;
             useWind = BallisticSettings.useWindForce;
-
-            Vector3 velocityDirection = transform.up;
+            Vector3 velocityDirection = Vector3.zero;
+            switch (ProjectileProperties.ShotDirection)
+            {
+                case ShotDirection.FORWARD:
+                    velocityDirection = transform.forward;
+                    break;
+                case ShotDirection.UP:
+                    velocityDirection = transform.up;
+                    break;
+                case ShotDirection.RIGHT:
+                    velocityDirection = transform.right;
+                    break;
+                default:
+                    velocityDirection = transform.forward;
+                    break;
+            }
             body.velocity = startingSpeed * velocityDirection;
         }
     }
