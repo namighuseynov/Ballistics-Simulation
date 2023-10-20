@@ -14,7 +14,7 @@ public class WeaponController : MonoBehaviour
         ballisticSettings = GetComponent<BallisticSettings>();
     }
 
-    public void Shot()
+    virtual public void Shot()
     {
         GameObject Projectile = Instantiate(ProjectileObject);
         Projectile.transform.position = ProjectileSpawnPoint.position;
