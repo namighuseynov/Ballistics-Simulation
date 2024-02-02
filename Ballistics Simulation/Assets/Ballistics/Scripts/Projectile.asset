@@ -18,5 +18,6 @@ MonoBehaviour:
   Density: 1.25
   StartingSpeed: 100
   deltaTime: 0.5
+  ShotDirection: 2
   liveTime: 20
   updateMode: 0
