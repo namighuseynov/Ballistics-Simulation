@@ -1,31 +1,34 @@
 using UnityEngine;
 
-public class WeaponController : MonoBehaviour
+namespace BallisticsSimulation
 {
-    [Header("Ballistics")]
-    public BallisticSettings ballisticSettings;
-
-    [Header("Projectile")]
-    public GameObject ProjectileObject;
-    public Transform ProjectileSpawnPoint;
-
-    private void Start()
+    public class WeaponController : MonoBehaviour
     {
-        ballisticSettings = GetComponent<BallisticSettings>();
-    }
+        [Header("Ballistics")]
+        public BallisticSettings ballisticSettings;
 
-    virtual public void Shot()
-    {
-        GameObject Projectile = Instantiate(ProjectileObject);
-        Projectile.transform.position = ProjectileSpawnPoint.position;
-        Projectile.transform.rotation = ProjectileSpawnPoint.rotation;
-    }
+        [Header("Projectile")]
+        public GameObject ProjectileObject;
+        public Transform ProjectileSpawnPoint;
 
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
+        private void Start()
         {
-            Shot();
+            ballisticSettings = GetComponent<BallisticSettings>();
+        }
+
+        virtual public void Shot()
+        {
+            GameObject Projectile = Instantiate(ProjectileObject);
+            Projectile.transform.position = ProjectileSpawnPoint.position;
+            Projectile.transform.rotation = ProjectileSpawnPoint.rotation;
+        }
+
+        private void Update()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Shot();
+            }
         }
     }
 }

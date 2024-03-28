@@ -1,5 +1,8 @@
-public enum ProjectileUpdateMode
+namespace BallisticsSimulation
 {
-    VELOCITY_CHANGE,
-    FORCE_CHANGE
+    public enum ProjectileUpdateMode
+    {
+        VELOCITY_CHANGE,
+        FORCE_CHANGE
+    }
 }
