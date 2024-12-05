@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BallisticsSimulation
@@ -10,6 +11,10 @@ namespace BallisticsSimulation
         [Header("Projectile")]
         public GameObject ProjectileObject;
         public Transform ProjectileSpawnPoint;
+        public GameObject Recorder;
+        public List<Transform> RecorderTransformList;
+
+        public GameObject Projectile;
 
         private void Start()
         {
@@ -18,7 +23,7 @@ namespace BallisticsSimulation
 
         virtual public void Shot()
         {
-            GameObject Projectile = Instantiate(ProjectileObject);
+            Projectile = Instantiate(ProjectileObject);
             Projectile.transform.position = ProjectileSpawnPoint.position;
             Projectile.transform.rotation = ProjectileSpawnPoint.rotation;
         }
