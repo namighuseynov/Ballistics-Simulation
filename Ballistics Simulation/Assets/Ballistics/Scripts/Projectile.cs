@@ -41,20 +41,13 @@ namespace BallisticsSimulation
         private bool useWind;
         private float atmosphereTemperature;
         private float atmosphereDensity;
-
-        private bool record = true;
-        private bool recording = false;
-        private float recordInterval = 0.1f;
-
-        //Projectile record
-        List<Vector3> coords = new List<Vector3>();
         #endregion
 
         #region Events
-        public event Action<Transform, Vector3[]> OnProjectileTriggered;
+        public event Action<Transform> OnProjectileTriggered;
         #endregion
 
-
+        #region Methods
         private void Start()
         {
             body = GetComponent<Rigidbody>();
@@ -68,10 +61,6 @@ namespace BallisticsSimulation
             {
                 Debug.LogError("BallisticSettings component not found on Weapon object.");
                 return;
-            }
-            if (record)
-            {
-                StartRecord();
             }
             Destroy(gameObject, ProjectileProperties.liveTime);
             area = ProjectileProperties.Area;
@@ -123,12 +112,11 @@ namespace BallisticsSimulation
         }
         private float GetPressure()
         {
-            //float s_pressure = R * atmoshereTemperature / 22.4f;
             float power = (-Mathf.Abs(-Physics.gravity.y) * M) / (R * L);
 
             float var = 1 + (L * transform.position.y / atmosphereTemperature);
             float pressure = 101325f * Mathf.Pow(var, power);
-            //float pressure2 = 101325f * Mathf.Exp((-M * Mathf.Abs(Physics.gravity.y)*transform.position.y)/(R*GetTemperature()));
+
             return pressure;
         }
         private float GetDensity()
@@ -142,29 +130,14 @@ namespace BallisticsSimulation
             return body.velocity.magnitude;
         }
 
-        private void StartRecord()
-        {
-            recording = true;
-            StartCoroutine(Record(recordInterval));
-        }
-
-        IEnumerator Record(float time)
-        {
-            while (recording)
-            {
-                yield return new WaitForSeconds(time);
-                coords.Add(transform.position);
-            }
-        }
-
         private void OnTriggerEnter(Collider other)
         {
             if (other.tag == "Floor")
             {
-                recording = false;
-                OnProjectileTriggered?.Invoke(transform, new List<Vector3>(coords).ToArray());
-                coords.Clear();
+                OnProjectileTriggered?.Invoke(transform);
             }
         }
+
+        #endregion
     }
 }

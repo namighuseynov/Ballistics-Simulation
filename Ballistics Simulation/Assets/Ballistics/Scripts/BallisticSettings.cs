@@ -9,7 +9,7 @@ namespace BallisticsSimulation
         public bool useWindForce = false;
         public bool useThrust = false;
 
-        public Vector3 windDirection = Vector3.zero;
+        public WindZone Wind;
         public Vector3 thrustDirection = Vector3.zero;
         public float projectileForce = 0;
 
