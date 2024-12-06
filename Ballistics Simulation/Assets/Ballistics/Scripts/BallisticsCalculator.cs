@@ -17,10 +17,15 @@ public class BallisticsCalculator : MonoBehaviour
     private const float EarthRadius = 6371000f; // Earth radius 
     #endregion
 
-    public float CalculateDrag(float height, float speed)
+    #region Methods
+    public Vector3 CalculateDrag(float height, Vector3 velocity)
     {
+        Vector3 drag = Vector3.zero;
         float density = CalculateDensity(height);
-        float drag = _projectileProperties.dragCoefficient * density * Mathf.Pow(speed, 2) * _projectileProperties.Area * 0.5f;
+        for (int i = 0; i < 3; i++)
+        {
+            drag[i] = _projectileProperties.dragCoefficient * density * Mathf.Pow(velocity[i], 2) * _projectileProperties.Area * 0.5f;
+        }
         return drag;
     }
 
@@ -49,4 +54,5 @@ public class BallisticsCalculator : MonoBehaviour
     {
         return 9.80665f * Mathf.Pow(EarthRadius / (EarthRadius + height), 2) * -1;
     }
+    #endregion
 }

@@ -75,17 +75,16 @@ namespace BallisticsSimulation
             if (BallisticSettings.UseGravity)
             {
                 float height = transform.position.y;
-
                 Vector3 gravity = new Vector3(0, calculator.CalculateGravity(height), 0);
                 body.AddForceAtPosition(gravity, CenterOfMass.position);
-            } 
+            }
             if (BallisticSettings.UseDrag)
             {
                 float height = transform.position.y;
-                Vector3 drag = new Vector3(calculator.CalculateDrag(height, body.linearVelocity.x),
-                    calculator.CalculateDrag(height, body.linearVelocity.y),
-                    calculator.CalculateDrag(height, body.linearVelocity.z));
-                body.AddForceAtPosition(drag, CenterOfMass.position);
+                Vector3 velocity = body.linearVelocity;
+                Vector3 drag = calculator.CalculateDrag(height, velocity);
+                drag = transform.up * -drag.x + transform.right*-drag.y + transform.forward*-drag.z;
+                body.AddForce(drag);
             }
         }
         private void OnTriggerEnter(Collider other)
@@ -93,6 +92,7 @@ namespace BallisticsSimulation
             if (other.tag == "Floor")
             {
                 OnProjectileTriggered?.Invoke(transform);
+                Destroy(gameObject);
             }
         }
 
