@@ -43,6 +43,7 @@ namespace BallisticsSimulation
                 Debug.LogError("Rigidbody or ProjectileProperties is missing.");
                 return;
             }
+            body.useGravity = false;
             BallisticSettings = GameObject.FindGameObjectWithTag("Weapon")?.GetComponent<BallisticSettings>();
             if (BallisticSettings == null)
             {
@@ -71,7 +72,6 @@ namespace BallisticsSimulation
         }
         private void FixedUpdate()
         {
-            body.useGravity = false;
             if (BallisticSettings.UseGravity)
             {
                 float height = transform.position.y;
@@ -81,11 +81,11 @@ namespace BallisticsSimulation
             } 
             if (BallisticSettings.UseDrag)
             {
-                Vector3 drag = new Vector3(calculator.CalculateDrag(transform.position.y, body.linearVelocity.x),
-                    calculator.CalculateDrag(transform.position.y, body.linearVelocity.y),
-                    calculator.CalculateDrag(transform.position.y, body.linearVelocity.z));
+                float height = transform.position.y;
+                Vector3 drag = new Vector3(calculator.CalculateDrag(height, body.linearVelocity.x),
+                    calculator.CalculateDrag(height, body.linearVelocity.y),
+                    calculator.CalculateDrag(height, body.linearVelocity.z));
                 body.AddForceAtPosition(drag, CenterOfMass.position);
-                Debug.Log(drag);
             }
         }
         private void OnTriggerEnter(Collider other)

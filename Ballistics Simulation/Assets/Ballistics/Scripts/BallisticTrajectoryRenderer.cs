@@ -15,7 +15,7 @@ public class BallisticTrajectoryRenderer : MonoBehaviour
     [SerializeField] private ProjectileProperties _projectileProps;
     [SerializeField] private BallisticsCalculator _ballCalculator;
     private Vector3 _forwardDirection;
-    private Vector3 _upDirection;
+    private Vector3 _strightDirection;
     private Vector3 _rightDirection;
     private BallisticSettings _ballisticSettings;
     
@@ -63,33 +63,32 @@ public class BallisticTrajectoryRenderer : MonoBehaviour
         return windDirection * (windSpeed + turbulence);
     }
 
-
-
     private void DrawBaseVectors()
     {
-        // Forward basis (green)
+        // Forward direction (green)
         _forwardDirection = _projectileSpawnPoint.up;
 
-        // Up basis (blue)
-        _upDirection = _projectileSpawnPoint.up;
-        _upDirection.y = 0;
-        _upDirection.Normalize();
-        // Right basis (red)
+        // Stright direction (blue)
+        _strightDirection = _forwardDirection;
+        _strightDirection.y = 0;
+        _strightDirection.Normalize();
+
+        // Right direction (red)
         _rightDirection = Vector3.Cross(_projectileSpawnPoint.up, Vector3.up).normalized;
 
         // Draw debug lines
         Debug.DrawLine(_projectileSpawnPoint.position, _projectileSpawnPoint.position + _forwardDirection, Color.green);
         Debug.DrawLine(_projectileSpawnPoint.position, _projectileSpawnPoint.position + _rightDirection, Color.red);
-        Debug.DrawLine(_projectileSpawnPoint.position, _projectileSpawnPoint.position + _upDirection, Color.blue);
+        Debug.DrawLine(_projectileSpawnPoint.position, _projectileSpawnPoint.position + _strightDirection, Color.blue);
     }
 
     private void UpdateTrajectory()
     {
         _trajectoryPoints.Clear();
 
-        float theta = Mathf.Deg2Rad * (Vector3.Angle(_upDirection, _forwardDirection));
+        float theta = Mathf.Deg2Rad * (Vector3.Angle(_strightDirection, _forwardDirection));
         Vector3 startPosition = _projectileSpawnPoint.position;
-        Vector3 launchDirection = _upDirection;
+        Vector3 launchDirection = _strightDirection;
         float v0 = _projectileProps.StartingSpeed;
         float v0x = v0 * Mathf.Cos(theta);
         float v0y = v0 * Mathf.Sin(theta);

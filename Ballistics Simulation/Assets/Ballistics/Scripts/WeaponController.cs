@@ -1,33 +1,25 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BallisticsSimulation
 {
+    /// <summary>
+    /// Weapon controller
+    /// </summary>
     public class WeaponController : MonoBehaviour
     {
-        [Header("Ballistics")]
-        public BallisticSettings ballisticSettings;
-
+        #region Fields
         [Header("Projectile")]
-        public GameObject ProjectileObject;
-        public Transform ProjectileSpawnPoint;
-        public GameObject Recorder;
-        public List<Transform> RecorderTransformList;
+        [SerializeField] private Transform _projectileSpawnPoint;
+        [SerializeField] private GameObject _projectilePrefab;
+        #endregion
 
-        public GameObject Projectile;
-
-        private void Start()
-        {
-            ballisticSettings = GetComponent<BallisticSettings>();
-        }
-
+        #region Methods
         virtual public void Shot()
         {
-            Projectile = Instantiate(ProjectileObject);
-            Projectile.transform.position = ProjectileSpawnPoint.position;
-            Projectile.transform.rotation = ProjectileSpawnPoint.rotation;
+            GameObject projectile = Instantiate(_projectilePrefab);
+            projectile.transform.position = _projectileSpawnPoint.position;
+            projectile.transform.rotation = _projectileSpawnPoint.rotation;
         }
-
         private void Update()
         {
             if (Input.GetMouseButtonDown(0))
@@ -35,5 +27,6 @@ namespace BallisticsSimulation
                 Shot();
             }
         }
+        #endregion
     }
 }
