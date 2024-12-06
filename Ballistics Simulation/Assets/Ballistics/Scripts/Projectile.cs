@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BallisticsSimulation
@@ -25,22 +23,11 @@ namespace BallisticsSimulation
 
         //Projectile properies
         [Header("ProjectileProperties")]
-        private float area;
-        private float weight;
-        private float dragCoefficent;
         private float startingSpeed;
 
         //Ballistic settings
         [Header("Ballistics settings")]
-        private const float L = -0.0065f;
-        private const float R = 8.31447f;
-        private const float M = 0.029f;
-
-        private bool useGravity;
-        private bool useDrag;
-        private bool useWind;
-        private float atmosphereTemperature;
-        private float atmosphereDensity;
+        [SerializeField] private BallisticsCalculator calculator;
         #endregion
 
         #region Events
@@ -62,17 +49,14 @@ namespace BallisticsSimulation
                 Debug.LogError("BallisticSettings component not found on Weapon object.");
                 return;
             }
+            if (calculator == null)
+            {
+                calculator = GameObject.FindGameObjectWithTag("Weapon")?.GetComponent<BallisticsCalculator>();
+            }
             Destroy(gameObject, ProjectileProperties.liveTime);
-            area = ProjectileProperties.Area;
-            weight = ProjectileProperties.Weight;
-            dragCoefficent = ProjectileProperties.dragCoefficient;
+
             startingSpeed = ProjectileProperties.StartingSpeed;
 
-            atmosphereDensity = BallisticSettings.AtmosphereDensity;
-            atmosphereTemperature = BallisticSettings.AtmosphereTemperature;
-            useGravity = BallisticSettings.useGravity;
-            useDrag = BallisticSettings.useDrag;
-            useWind = BallisticSettings.useWindForce;
             Vector3 velocityDirection = transform.forward;
             switch (ProjectileProperties.ShotDirection)
             {
@@ -88,48 +72,22 @@ namespace BallisticsSimulation
         private void FixedUpdate()
         {
             body.useGravity = false;
-            if (useGravity) { CalculateGravity(); }
-            if (useDrag) { CalculateDrag(); }
+            if (BallisticSettings.UseGravity)
+            {
+                float height = transform.position.y;
 
-            GetDensity();
-
+                Vector3 gravity = new Vector3(0, calculator.CalculateGravity(height), 0);
+                body.AddForceAtPosition(gravity, CenterOfMass.position);
+            } 
+            if (BallisticSettings.UseDrag)
+            {
+                Vector3 drag = new Vector3(calculator.CalculateDrag(transform.position.y, body.velocity.x),
+                    calculator.CalculateDrag(transform.position.y, body.velocity.y),
+                    calculator.CalculateDrag(transform.position.y, body.velocity.z));
+                body.AddForceAtPosition(drag, CenterOfMass.position);
+                Debug.Log(drag);
+            }
         }
-        private void CalculateGravity()
-        {
-            Gravity = Physics.gravity * weight;
-            body.AddForceAtPosition(Gravity, CenterOfMass.position);
-        }
-        private void CalculateDrag()
-        {
-            Vector3 dragDirection = -body.velocity.normalized;
-            Drag = dragDirection * dragCoefficent * atmosphereDensity
-                            * Mathf.Pow(GetSpeed(), 2) * area;
-            body.AddForce(Drag);
-        }
-        private float GetTemperature()
-        {
-            return (atmosphereTemperature + transform.position.y * L);
-        }
-        private float GetPressure()
-        {
-            float power = (-Mathf.Abs(-Physics.gravity.y) * M) / (R * L);
-
-            float var = 1 + (L * transform.position.y / atmosphereTemperature);
-            float pressure = 101325f * Mathf.Pow(var, power);
-
-            return pressure;
-        }
-        private float GetDensity()
-        {
-            float density = (GetPressure() * M) / (R * GetTemperature());
-            atmosphereDensity = density;
-            return density;
-        }
-        private float GetSpeed()
-        {
-            return body.velocity.magnitude;
-        }
-
         private void OnTriggerEnter(Collider other)
         {
             if (other.tag == "Floor")
