@@ -67,7 +67,7 @@ namespace BallisticsSimulation
                     velocityDirection = transform.right;
                     break;
             }
-            body.velocity = startingSpeed * velocityDirection;
+            body.linearVelocity = startingSpeed * velocityDirection;
         }
         private void FixedUpdate()
         {
@@ -81,9 +81,9 @@ namespace BallisticsSimulation
             } 
             if (BallisticSettings.UseDrag)
             {
-                Vector3 drag = new Vector3(calculator.CalculateDrag(transform.position.y, body.velocity.x),
-                    calculator.CalculateDrag(transform.position.y, body.velocity.y),
-                    calculator.CalculateDrag(transform.position.y, body.velocity.z));
+                Vector3 drag = new Vector3(calculator.CalculateDrag(transform.position.y, body.linearVelocity.x),
+                    calculator.CalculateDrag(transform.position.y, body.linearVelocity.y),
+                    calculator.CalculateDrag(transform.position.y, body.linearVelocity.z));
                 body.AddForceAtPosition(drag, CenterOfMass.position);
                 Debug.Log(drag);
             }
