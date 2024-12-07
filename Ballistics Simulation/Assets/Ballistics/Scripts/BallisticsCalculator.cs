@@ -1,4 +1,5 @@
 using BallisticsSimulation;
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -20,13 +21,20 @@ public class BallisticsCalculator : MonoBehaviour
     #region Methods
     public Vector3 CalculateDrag(float height, Vector3 velocity)
     {
-        Vector3 drag = Vector3.zero;
-        float density = CalculateDensity(height);
-        for (int i = 0; i < 3; i++)
-        {
-            drag[i] = _projectileProperties.dragCoefficient * density * Mathf.Pow(velocity[i], 2) * _projectileProperties.Area * 0.5f;
-        }
-        return drag;
+        float density = CalculateDensity(height); 
+
+        float dragX = CalculateDragComponent(velocity.x, density);
+        float dragY = CalculateDragComponent(velocity.y, density);
+        float dragZ = CalculateDragComponent(velocity.z, density);
+
+        return new Vector3(dragX, dragY, dragZ);
+    }
+
+    private float CalculateDragComponent(float velocityComponent, float density)
+    {
+        float speedSquared = MathF.Pow(velocityComponent, 2); 
+        float direction = velocityComponent >= 0 ? -1f : 1f; 
+        return direction * _projectileProperties.dragCoefficient * density * speedSquared * _projectileProperties.Area * 0.5f;
     }
 
     private float CalculateTemperature(float height)
@@ -44,15 +52,15 @@ public class BallisticsCalculator : MonoBehaviour
 
     private float CalculatePressure(float height)
     {
-        float power = (-Mathf.Abs(CalculateGravity(height)) * M) / (R * L);
+        float power = (-Mathf.Abs(CalculateGravity(height).y) * M) / (R * L);
 
         float var = 1 + (L * height / _atmosphereProperties.Temperature);
         return _atmosphereProperties.Pressure * Mathf.Pow(var, power);
     }
 
-    public float CalculateGravity(float height)
+    public Vector3 CalculateGravity(float height)
     {
-        return 9.80665f * Mathf.Pow(EarthRadius / (EarthRadius + height), 2) * -1;
+        return -9.80665f * Mathf.Pow(EarthRadius / (EarthRadius + height), 2) * Vector3.up;
     }
     #endregion
 }

@@ -75,8 +75,8 @@ namespace BallisticsSimulation
             if (BallisticSettings.UseGravity)
             {
                 float height = transform.position.y;
-                Vector3 gravity = new Vector3(0, calculator.CalculateGravity(height), 0);
-                body.AddForceAtPosition(gravity, CenterOfMass.position);
+                Vector3 gravity = calculator.CalculateGravity(height);
+                body.AddForce(gravity, ForceMode.Acceleration);
             }
             if (BallisticSettings.UseDrag)
             {
@@ -84,7 +84,7 @@ namespace BallisticsSimulation
                 Vector3 velocity = body.linearVelocity;
                 Vector3 drag = calculator.CalculateDrag(height, velocity);
                 drag = transform.up * -drag.x + transform.right*-drag.y + transform.forward*-drag.z;
-                body.AddForce(drag);
+                body.AddForce(drag, ForceMode.Acceleration);
             }
         }
         private void OnTriggerEnter(Collider other)
