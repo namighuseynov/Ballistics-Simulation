@@ -582,7 +582,6 @@ MonoBehaviour:
   UseGravity: 1
   UseDrag: 1
   UseWindForce: 0
-  Wind: {fileID: 280099813}
 --- !u!114 &918245475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -721,6 +720,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _atmosphereProperties: {fileID: 11400000, guid: a94beb36648a2a642a1625e6c8c26c97, type: 2}
   _projectileProperties: {fileID: 11400000, guid: acaaacfcd837ac54488d59f6442435d8, type: 2}
+  _wind: {fileID: 280099813}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

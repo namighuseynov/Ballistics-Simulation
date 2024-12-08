@@ -11,8 +11,6 @@ namespace BallisticsSimulation
         public bool UseGravity = true;
         public bool UseDrag = false;
         public bool UseWindForce = false;
-
-        public WindZone Wind;
         #endregion
     }
 }

@@ -12,6 +12,9 @@ public class BallisticsCalculator : MonoBehaviour
     [Header("Ballistics settings")]
     [SerializeField] private AtmosphereProperties _atmosphereProperties;
     [SerializeField] private ProjectileProperties _projectileProperties;
+
+    [Header("Wind")]
+    [SerializeField] private WindZone _wind; //Wind object
     private const float L = -0.0065f;   // (K/m)
     private const float R = 8.31447f;   // (J/(mol*K))
     private const float M = 0.0289647f; // (kg/mol)
@@ -61,6 +64,18 @@ public class BallisticsCalculator : MonoBehaviour
     public Vector3 CalculateGravity(float height)
     {
         return -9.80665f * Mathf.Pow(EarthRadius / (EarthRadius + height), 2) * Vector3.up;
+    }
+    public Vector3 CalculateWind(Vector3 direction)
+    {
+        Vector3 windDirection = _wind.transform.forward;
+        float windSpeed = _wind.windMain;
+        float turbulence = _wind.windTurbulence * UnityEngine.Random.Range(-1f, 1f);
+        Vector3 windVelocity = windDirection * (windSpeed + turbulence);
+
+        float angle = Mathf.Deg2Rad * Vector3.SignedAngle(windDirection, direction, Vector3.up);
+        float windForceForward = windVelocity.magnitude * Convert.ToSingle(Math.Sin(angle));
+        float windForceRight = windVelocity.magnitude * Convert.ToSingle(Math.Cos(angle));
+        return new Vector3(windForceForward, 0, windForceRight);
     }
     #endregion
 }
