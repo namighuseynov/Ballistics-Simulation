@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Weight: 1
   Area: 0.0056
-  dragCoefficient: 0.1
+  dragCoefficient: 4.93
   StartingSpeed: 20
   deltaTime: 0.5
   ShotDirection: 2

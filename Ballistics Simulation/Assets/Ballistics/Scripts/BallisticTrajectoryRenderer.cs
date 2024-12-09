@@ -23,7 +23,7 @@ public class BallisticTrajectoryRenderer : MonoBehaviour
     [Header("Trajectory")]
     [SerializeField] private float timeStep = 0.2f;
     [SerializeField] private float maxTime = 100;
-    private List<Vector3> _trajectoryPoints = new List<Vector3>();
+    public List<Vector3> TrajectoryPoints = new List<Vector3>();
     private float elapsedTime = 0;
     private LineRenderer _lineRenderer;
     #endregion
@@ -76,7 +76,7 @@ public class BallisticTrajectoryRenderer : MonoBehaviour
 
     private void UpdateTrajectory()
     {
-        _trajectoryPoints.Clear();
+        TrajectoryPoints.Clear();
 
         float theta = Vector3.Angle(_strightDirection, _forwardDirection);
 
@@ -104,7 +104,7 @@ public class BallisticTrajectoryRenderer : MonoBehaviour
             displacement += velocity * timeStep + acceleration * MathF.Pow(timeStep, 2) * 0.5f;
             Vector3 newCoord = startPosition + _strightDirection * displacement.x + Vector3.up * displacement.y + _rightDirection * displacement.z;
             if (newCoord.y < 0) break; // Stop if the projectile hits the ground
-            _trajectoryPoints.Add(newCoord);
+            TrajectoryPoints.Add(newCoord);
             elapsedTime += timeStep;
         }
         // Update the line renderer
@@ -112,8 +112,8 @@ public class BallisticTrajectoryRenderer : MonoBehaviour
     }
     private void RenderTrajectory()
     {
-        _lineRenderer.positionCount = _trajectoryPoints.Count;
-        _lineRenderer.SetPositions(_trajectoryPoints.ToArray());
+        _lineRenderer.positionCount = TrajectoryPoints.Count;
+        _lineRenderer.SetPositions(TrajectoryPoints.ToArray());
     }
     private void Update()
     {
