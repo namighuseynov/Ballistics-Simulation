@@ -18,10 +18,6 @@ namespace BallisticsSimulation
         /// </summary>
         public float Pressure = 101325f;
         /// <summary>
-        /// Normal Humidity
-        /// </summary>
-        public float Humidity;
-        /// <summary>
         /// Normal Density
         /// </summary>
         public float Density = 1.225f;

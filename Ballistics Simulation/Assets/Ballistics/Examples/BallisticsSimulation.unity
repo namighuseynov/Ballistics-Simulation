@@ -161,13 +161,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 280099812}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -1, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_Father: {fileID: 598163339}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &451528207
 GameObject:
@@ -329,6 +329,7 @@ Transform:
   m_Children:
   - {fileID: 963194228}
   - {fileID: 705507995}
+  - {fileID: 280099814}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -542,12 +543,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd950017f7cf6448a0bb8dcf0d6b45c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballisticSettings: {fileID: 918245474}
-  ProjectileObject: {fileID: 1853104297891856670, guid: 821865c5420dda4488345a6f7c95ab96, type: 3}
-  ProjectileSpawnPoint: {fileID: 1108704817}
-  Recorder: {fileID: 1853104297891856670, guid: 76436c66288612c44829a7b8b833e44c, type: 3}
-  RecorderTransformList: []
-  Projectile: {fileID: 0}
+  _projectileSpawnPoint: {fileID: 1108704817}
+  _projectilePrefab: {fileID: 1853104297891856670, guid: 821865c5420dda4488345a6f7c95ab96, type: 3}
 --- !u!114 &918245474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -563,8 +560,6 @@ MonoBehaviour:
   UseGravity: 1
   UseDrag: 0
   UseWindForce: 0
-  UseThrust: 0
-  Wind: {fileID: 280099813}
 --- !u!114 &918245475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -695,6 +690,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _atmosphereProperties: {fileID: 11400000, guid: a94beb36648a2a642a1625e6c8c26c97, type: 2}
   _projectileProperties: {fileID: 11400000, guid: acaaacfcd837ac54488d59f6442435d8, type: 2}
+  _wind: {fileID: 280099813}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

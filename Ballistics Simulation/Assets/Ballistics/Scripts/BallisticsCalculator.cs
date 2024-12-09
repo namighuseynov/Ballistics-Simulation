@@ -1,4 +1,5 @@
 using BallisticsSimulation;
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -11,22 +12,37 @@ public class BallisticsCalculator : MonoBehaviour
     [Header("Ballistics settings")]
     [SerializeField] private AtmosphereProperties _atmosphereProperties;
     [SerializeField] private ProjectileProperties _projectileProperties;
+
+    [Header("Wind")]
+    [SerializeField] private WindZone _wind; //Wind object
     private const float L = -0.0065f;   // (K/m)
     private const float R = 8.31447f;   // (J/(mol*K))
     private const float M = 0.0289647f; // (kg/mol)
     private const float EarthRadius = 6371000f; // Earth radius 
     #endregion
 
-    public float CalculateDrag(float height, float speed)
+    #region Methods
+    public Vector3 CalculateDrag(float height, Vector3 velocity)
     {
         float density = CalculateDensity(height);
-        float drag = _projectileProperties.dragCoefficient * density * Mathf.Pow(speed, 2) * _projectileProperties.Area * 0.5f;
-        return drag;
+
+        float dragX = CalculateDragComponent(velocity.x, density);
+        float dragY = CalculateDragComponent(velocity.y, density);
+        float dragZ = CalculateDragComponent(velocity.z, density);
+
+        return new Vector3(dragX, dragY, dragZ);
+    }
+
+    private float CalculateDragComponent(float velocityComponent, float density)
+    {
+        float speedSquared = MathF.Pow(velocityComponent, 2);
+        float direction = velocityComponent >= 0 ? -1f : 1f;
+        return direction * _projectileProperties.dragCoefficient * density * speedSquared * _projectileProperties.Area * 0.5f;
     }
 
     private float CalculateTemperature(float height)
     {
-        return Mathf.Max(_atmosphereProperties.Temperature + height * L, 1f); 
+        return Mathf.Max(_atmosphereProperties.Temperature + height * L, 1f);
     }
 
     private float CalculateDensity(float height)
@@ -39,14 +55,27 @@ public class BallisticsCalculator : MonoBehaviour
 
     private float CalculatePressure(float height)
     {
-        float power = (-Mathf.Abs(CalculateGravity(height)) * M) / (R * L);
+        float power = (-Mathf.Abs(CalculateGravity(height).y) * M) / (R * L);
 
         float var = 1 + (L * height / _atmosphereProperties.Temperature);
         return _atmosphereProperties.Pressure * Mathf.Pow(var, power);
     }
 
-    public float CalculateGravity(float height)
+    public Vector3 CalculateGravity(float height)
     {
-        return 9.80665f * Mathf.Pow(EarthRadius / (EarthRadius + height), 2) * -1;
+        return -9.80665f * Mathf.Pow(EarthRadius / (EarthRadius + height), 2) * Vector3.up;
     }
+    public Vector3 CalculateWind(Vector3 direction)
+    {
+        Vector3 windDirection = _wind.transform.forward;
+        float windSpeed = _wind.windMain;
+        float turbulence = _wind.windTurbulence * UnityEngine.Random.Range(-1f, 1f);
+        Vector3 windVelocity = windDirection * (windSpeed + turbulence);
+
+        float angle = Mathf.Deg2Rad * Vector3.SignedAngle(windDirection, direction, Vector3.up);
+        float windForceForward = windVelocity.magnitude * Convert.ToSingle(Math.Sin(angle));
+        float windForceRight = windVelocity.magnitude * Convert.ToSingle(Math.Cos(angle));
+        return new Vector3(windForceForward, 0, windForceRight);
+    }
+    #endregion
 }

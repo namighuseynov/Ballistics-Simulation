@@ -15,10 +15,10 @@ public class BallisticTrajectoryRenderer : MonoBehaviour
     [SerializeField] private ProjectileProperties _projectileProps;
     [SerializeField] private BallisticsCalculator _ballCalculator;
     private Vector3 _forwardDirection;
-    private Vector3 _upDirection;
+    private Vector3 _strightDirection;
     private Vector3 _rightDirection;
+    private Vector3 _upDirection;
     private BallisticSettings _ballisticSettings;
-    
 
     [Header("Trajectory")]
     [SerializeField] private float timeStep = 0.2f;
@@ -26,9 +26,6 @@ public class BallisticTrajectoryRenderer : MonoBehaviour
     private List<Vector3> _trajectoryPoints = new List<Vector3>();
     private float elapsedTime = 0;
     private LineRenderer _lineRenderer;
-    private float Sx = 0;
-    private float Sy = 0;
-    private float Sz = 0;   
     #endregion
 
     #region Methods
@@ -54,108 +51,74 @@ public class BallisticTrajectoryRenderer : MonoBehaviour
         }
     }
 
-    private Vector3 CalculateWindVelocity()
+    private void DrawDirectionVectors()
     {
-        Vector3 windDirection = _ballisticSettings.Wind.transform.forward;
-        float windSpeed = _ballisticSettings.Wind.windMain;
-        float turbulence = _ballisticSettings.Wind.windTurbulence * UnityEngine.Random.Range(-1f, 1f);
-
-        return windDirection * (windSpeed + turbulence);
-    }
-
-
-
-    private void DrawBaseVectors()
-    {
-        // Forward basis (green)
+        // Forward direction (green)
         _forwardDirection = _projectileSpawnPoint.up;
 
-        // Up basis (blue)
-        _upDirection = _projectileSpawnPoint.up;
-        _upDirection.y = 0;
-        _upDirection.Normalize();
-        // Right basis (red)
+        // Stright direction (blue)
+        _strightDirection = _forwardDirection;
+        _strightDirection.y = 0;
+        _strightDirection.Normalize();
+
+        // Right direction (red)
         _rightDirection = Vector3.Cross(_projectileSpawnPoint.up, Vector3.up).normalized;
+
+        // Up direction (yellow)
+        _upDirection = Vector3.up;
 
         // Draw debug lines
         Debug.DrawLine(_projectileSpawnPoint.position, _projectileSpawnPoint.position + _forwardDirection, Color.green);
         Debug.DrawLine(_projectileSpawnPoint.position, _projectileSpawnPoint.position + _rightDirection, Color.red);
-        Debug.DrawLine(_projectileSpawnPoint.position, _projectileSpawnPoint.position + _upDirection, Color.blue);
+        Debug.DrawLine(_projectileSpawnPoint.position, _projectileSpawnPoint.position + _strightDirection, Color.blue);
+        Debug.DrawLine(_projectileSpawnPoint.position, _projectileSpawnPoint.position + _upDirection, Color.yellow);
     }
 
     private void UpdateTrajectory()
     {
         _trajectoryPoints.Clear();
 
-        float theta = Mathf.Deg2Rad * (Vector3.Angle(_upDirection, _forwardDirection));
-        Vector3 startPosition = _projectileSpawnPoint.position;
-        Vector3 launchDirection = _upDirection;
-        float v0 = _projectileProps.StartingSpeed;
-        float v0x = v0 * Mathf.Cos(theta);
-        float v0y = v0 * Mathf.Sin(theta);
-        Vector3 velocity = new Vector3(v0x, v0y);
-        Vector3 windForces = Wind();
+        float theta = Vector3.Angle(_strightDirection, _forwardDirection);
 
-        Sx = 0;
-        Sy = 0;
-        Sz = 0;
+        Vector3 startPosition = _projectileSpawnPoint.position;
+        Vector3 startedVelocity = new Vector3(
+            _projectileProps.StartingSpeed * MathF.Cos(Mathf.Deg2Rad * theta),
+            _projectileProps.StartingSpeed * MathF.Sin(Mathf.Deg2Rad * theta),
+            0
+        );
+        Vector3 velocity = startedVelocity;
+        Vector3 displacement = Vector3.zero;
         elapsedTime = 0f;
         while (elapsedTime <= maxTime)
         {
-            float dragX = _ballisticSettings.UseDrag ? _ballCalculator.CalculateDrag(Sx, velocity.x) : 0;
-            float dragY = _ballisticSettings.UseDrag ? _ballCalculator.CalculateDrag(Sy, velocity.y) : 0;
-
-            velocity.x = v0x - dragX * elapsedTime;
-            velocity.y = v0y + Gravity() * elapsedTime * _projectileProps.Weight - dragY * elapsedTime;
-            velocity.z = 0;
-
-            Sx = v0x * elapsedTime - dragX * Mathf.Pow(elapsedTime, 2) * _projectileProps.Weight * 0.5f + windForces.z * elapsedTime;
-            Sy = v0y * elapsedTime + (0.5f * Gravity() * Mathf.Pow(elapsedTime, 2) * _projectileProps.Weight) - dragY * Mathf.Pow(elapsedTime, 2) * _projectileProps.Weight * 0.5f;
-            Sz = windForces.x * elapsedTime;
-
-            Vector3 newCoord = startPosition + launchDirection.normalized * Sx + Vector3.up * Sy + _projectileSpawnPoint.forward * Sz;
-
-            if (newCoord.y < startPosition.y) break; // Stop if the projectile hits the ground
-
+            //Calculating
+            Vector3 drag = _ballisticSettings.UseDrag ? _ballCalculator.CalculateDrag(displacement.y, velocity) * _projectileProps.Weight : Vector3.zero;
+            Vector3 gravity = _ballisticSettings.UseGravity ? _ballCalculator.CalculateGravity(displacement.y) * _projectileProps.Weight : Vector3.zero;
+            Vector3 wind = _ballisticSettings.UseWindForce ? _ballCalculator.CalculateWind(_projectileSpawnPoint.forward) * _projectileProps.Weight : Vector3.zero;
+            Vector3 acceleration = new Vector3(
+                drag.x + wind.x,
+                drag.y + gravity.y,
+                drag.z - wind.z
+            );
+            velocity += acceleration * timeStep;
+            displacement += velocity * timeStep + acceleration * MathF.Pow(timeStep, 2) * 0.5f;
+            Vector3 newCoord = startPosition + _strightDirection * displacement.x + Vector3.up * displacement.y + _rightDirection * displacement.z;
+            if (newCoord.y < 0) break; // Stop if the projectile hits the ground
             _trajectoryPoints.Add(newCoord);
             elapsedTime += timeStep;
         }
         // Update the line renderer
         RenderTrajectory();
     }
-
-    private float Gravity()
-    {
-        if (_ballisticSettings.UseGravity) return Physics.gravity.y;
-        return 0;
-    }
-
-    private Vector3 Wind()
-    {
-        Vector3 Wind = Vector3.zero;
-        if (_ballisticSettings.UseWindForce)
-        {
-            Vector3 windDirection = _ballisticSettings.Wind.transform.forward;
-            var windVelocity = CalculateWindVelocity();
-            float angleBetweenWindWeapon = Mathf.Deg2Rad * Vector3.SignedAngle(windDirection, _projectileSpawnPoint.forward, Vector3.up);
-            float windForceForward = windVelocity.magnitude * Convert.ToSingle(Math.Sin(angleBetweenWindWeapon));
-            float windForceRight = windVelocity.magnitude * Convert.ToSingle(Math.Cos(angleBetweenWindWeapon));
-            Wind = new Vector3(windForceRight, 0, windForceForward);
-        }
-        return Wind;
-    }
-
     private void RenderTrajectory()
     {
         _lineRenderer.positionCount = _trajectoryPoints.Count;
         _lineRenderer.SetPositions(_trajectoryPoints.ToArray());
     }
-
     private void Update()
     {
-        DrawBaseVectors();
+        DrawDirectionVectors();
         UpdateTrajectory();
     }
     #endregion
-
 }

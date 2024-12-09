@@ -43,6 +43,7 @@ namespace BallisticsSimulation
                 Debug.LogError("Rigidbody or ProjectileProperties is missing.");
                 return;
             }
+            body.useGravity = false;
             BallisticSettings = GameObject.FindGameObjectWithTag("Weapon")?.GetComponent<BallisticSettings>();
             if (BallisticSettings == null)
             {
@@ -71,21 +72,19 @@ namespace BallisticsSimulation
         }
         private void FixedUpdate()
         {
-            body.useGravity = false;
             if (BallisticSettings.UseGravity)
             {
                 float height = transform.position.y;
-
-                Vector3 gravity = new Vector3(0, calculator.CalculateGravity(height), 0);
-                body.AddForceAtPosition(gravity, CenterOfMass.position);
-            } 
+                Vector3 gravity = calculator.CalculateGravity(height);
+                body.AddForce(gravity, ForceMode.Acceleration);
+            }
             if (BallisticSettings.UseDrag)
             {
-                Vector3 drag = new Vector3(calculator.CalculateDrag(transform.position.y, body.velocity.x),
-                    calculator.CalculateDrag(transform.position.y, body.velocity.y),
-                    calculator.CalculateDrag(transform.position.y, body.velocity.z));
-                body.AddForceAtPosition(drag, CenterOfMass.position);
-                Debug.Log(drag);
+                float height = transform.position.y;
+                Vector3 velocity = body.velocity;
+                Vector3 drag = calculator.CalculateDrag(height, velocity);
+                drag = transform.up * -drag.x + transform.right * -drag.y + transform.forward * -drag.z;
+                body.AddForce(drag, ForceMode.Acceleration);
             }
         }
         private void OnTriggerEnter(Collider other)
@@ -93,6 +92,7 @@ namespace BallisticsSimulation
             if (other.tag == "Floor")
             {
                 OnProjectileTriggered?.Invoke(transform);
+                Destroy(gameObject);
             }
         }
 
