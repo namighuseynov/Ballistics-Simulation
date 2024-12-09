@@ -94,7 +94,7 @@ public class BallisticTrajectoryRenderer : MonoBehaviour
             //Calculating
             Vector3 drag = _ballisticSettings.UseDrag ? _ballCalculator.CalculateDrag(displacement.y, velocity) * _projectileProps.Weight : Vector3.zero;
             Vector3 gravity = _ballisticSettings.UseGravity ? _ballCalculator.CalculateGravity(displacement.y) * _projectileProps.Weight : Vector3.zero;
-            Vector3 wind = _ballisticSettings.UseWindForce ? _ballCalculator.CalculateWind(_projectileSpawnPoint.forward) * _projectileProps.Weight : Vector3.zero;
+            Vector3 wind = _ballisticSettings.UseWindForce ? _ballCalculator.CalculateWind(_strightDirection) * _projectileProps.Weight : Vector3.zero;
             Vector3 acceleration = new Vector3(
                 drag.x + wind.x,
                 drag.y + gravity.y,

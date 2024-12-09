@@ -72,7 +72,7 @@ public class BallisticsCalculator : MonoBehaviour
         float turbulence = _wind.windTurbulence * UnityEngine.Random.Range(-1f, 1f);
         Vector3 windVelocity = windDirection * (windSpeed + turbulence);
 
-        float angle = Mathf.Deg2Rad * Vector3.SignedAngle(windDirection, direction, Vector3.up);
+        float angle = Mathf.Deg2Rad * (90 + Vector3.SignedAngle(windDirection, direction, Vector3.up));
         float windForceForward = windVelocity.magnitude * Convert.ToSingle(Math.Sin(angle));
         float windForceRight = windVelocity.magnitude * Convert.ToSingle(Math.Cos(angle));
         return new Vector3(windForceForward, 0, windForceRight);
