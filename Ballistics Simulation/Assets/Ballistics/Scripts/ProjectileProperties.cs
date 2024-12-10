@@ -7,10 +7,15 @@ namespace BallisticsSimulation
     {
         #region Fields
         [Header("Ballistics")]
-        public float Weight = 1.00f;        //kg
-        public float Area = 0.50f;        //m^2
-        public float dragCoefficient = 0.50f;        //const
-        public float StartingSpeed = 10.0f;        //m/s
+        public float Weight = 1.00f;                    // kg
+        public float Area = 0.50f;                      // m^2
+        public float dragCoefficient = 0.50f;           // const
+        public float StartingSpeed = 10.0f;             // m/s
+
+        [Header("Engine")]
+        public float GasOutflowSpeed;                   // m/s
+        public float FuelMass;                          // kg
+        public float FuelBurningTime;                   // s
 
         [Header("Time Update")]
         public float deltaTime = 0.5f;

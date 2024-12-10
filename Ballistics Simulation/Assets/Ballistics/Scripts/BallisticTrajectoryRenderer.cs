@@ -10,15 +10,16 @@ using UnityEngine;
 public class BallisticTrajectoryRenderer : MonoBehaviour
 {
     #region Fields
-    [Header("Renderer Settings")]
+    [Header("Settings")]
     [SerializeField] private Transform _projectileSpawnPoint;
     [SerializeField] private ProjectileProperties _projectileProps;
     [SerializeField] private BallisticsCalculator _ballCalculator;
+    private BallisticSettings _ballisticSettings;
+    [Header("Directions")]
     private Vector3 _forwardDirection;
     private Vector3 _strightDirection;
     private Vector3 _rightDirection;
     private Vector3 _upDirection;
-    private BallisticSettings _ballisticSettings;
 
     [Header("Trajectory")]
     [SerializeField] private float timeStep = 0.2f;
@@ -89,27 +90,50 @@ public class BallisticTrajectoryRenderer : MonoBehaviour
         Vector3 velocity = startedVelocity;
         Vector3 displacement = Vector3.zero;
         elapsedTime = 0f;
+        float fuelMass = _projectileProps.FuelMass;
+        float totalMass = fuelMass + _projectileProps.Weight;
+        float mDot = fuelMass / _projectileProps.FuelBurningTime;
         while (elapsedTime <= maxTime)
         {
-            //Calculating
-            Vector3 drag = _ballisticSettings.UseDrag ? _ballCalculator.CalculateDrag(displacement.y, velocity) * _projectileProps.Weight : Vector3.zero;
-            Vector3 gravity = _ballisticSettings.UseGravity ? _ballCalculator.CalculateGravity(displacement.y) * _projectileProps.Weight : Vector3.zero;
-            Vector3 wind = _ballisticSettings.UseWindForce ? _ballCalculator.CalculateWind(_strightDirection) * _projectileProps.Weight : Vector3.zero;
+            // Forces
+            Vector3 drag = _ballisticSettings.UseDrag
+            ? _ballCalculator.CalculateDrag(displacement.y, velocity) * totalMass
+            : Vector3.zero;
+
+            Vector3 gravity = _ballisticSettings.UseGravity
+                ? _ballCalculator.CalculateGravity(displacement.y) * totalMass
+                : Vector3.zero;
+
+            Vector3 wind = _ballisticSettings.UseWindForce
+                ? _ballCalculator.CalculateWind(_strightDirection) * totalMass
+                : Vector3.zero;
+
+            Vector3 thrust = fuelMass > 0 && _ballisticSettings.UseThrust
+                ? _ballCalculator.CalculateThrust(_forwardDirection, fuelMass, _projectileProps.GasOutflowSpeed) * totalMass
+                : Vector3.zero;
+            //Debug.Log("Elapsed time" + elapsedTime + " " + "Speed" + velocity.magnitude);
+            // Acceleration
             Vector3 acceleration = new Vector3(
-                drag.x + wind.x,
-                drag.y + gravity.y,
-                drag.z - wind.z
+                drag.x + wind.x + thrust.x,
+                drag.y + gravity.y + thrust.y,
+                drag.z - wind.z + thrust.z
             );
+
+            // Mass update
+            fuelMass = Mathf.Max(0, (fuelMass - mDot*timeStep));
+            //Debug.Log($"Time: {elapsedTime:0.00}s, Fuel Mass: {fuelMass:0.0000}kg");
             velocity += acceleration * timeStep;
             displacement += velocity * timeStep + acceleration * MathF.Pow(timeStep, 2) * 0.5f;
             Vector3 newCoord = startPosition + _strightDirection * displacement.x + Vector3.up * displacement.y + _rightDirection * displacement.z;
             if (newCoord.y < 0) break; // Stop if the projectile hits the ground
             TrajectoryPoints.Add(newCoord);
             elapsedTime += timeStep;
-        }
+        } 
         // Update the line renderer
+        Debug.Log(Vector3.Distance(startPosition, TrajectoryPoints[TrajectoryPoints.Count - 1]));
         RenderTrajectory();
     }
+
     private void RenderTrajectory()
     {
         _lineRenderer.positionCount = TrajectoryPoints.Count;

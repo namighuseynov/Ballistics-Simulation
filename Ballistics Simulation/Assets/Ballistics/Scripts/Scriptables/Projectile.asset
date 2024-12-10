@@ -14,8 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Weight: 1
   Area: 0.0056
-  dragCoefficient: 4.93
-  StartingSpeed: 20
+  dragCoefficient: 0.6
+  StartingSpeed: 115
+  GasOutflowSpeed: 900
+  FuelMass: 0.25
+  FuelBurningTime: 1.5
   deltaTime: 0.5
   ShotDirection: 2
   liveTime: 80

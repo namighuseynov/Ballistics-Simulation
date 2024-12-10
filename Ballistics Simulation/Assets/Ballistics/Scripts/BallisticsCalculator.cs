@@ -40,6 +40,23 @@ public class BallisticsCalculator : MonoBehaviour
         return direction * _projectileProperties.dragCoefficient * density * speedSquared * _projectileProperties.Area * 0.5f;
     }
 
+    public Vector3 CalculateThrust(Vector3 direction, float fuelMass, float gasSpeed)
+    {
+        Vector3 velocity = direction * gasSpeed;
+        
+        float thrustX = CalculateThrustComponent(velocity.x, fuelMass);
+        float thrustY = CalculateThrustComponent(velocity.y, fuelMass);
+        float thrustZ = CalculateThrustComponent(velocity.z, fuelMass);
+        return new Vector3(thrustX, thrustY, thrustZ);
+    }
+
+    private float CalculateThrustComponent(float velocityComponent, float fuelMass)
+    {
+        float speed = velocityComponent;
+        float direction = speed >= 0 ? 1f : -1f;
+        return direction * fuelMass * speed;
+    }
+
     private float CalculateTemperature(float height)
     {
         return Mathf.Max(_atmosphereProperties.Temperature + height * L, 1f);
