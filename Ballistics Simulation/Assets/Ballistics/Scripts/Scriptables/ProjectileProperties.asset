@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c4154ba8c2ed8f742b0b77e7bac85fec, type: 3}
-  m_Name: Projectile
+  m_Name: ProjectileProperties
   m_EditorClassIdentifier: 
   Weight: 1
   Area: 0.0056
-  dragCoefficient: 0.6
-  StartingSpeed: 115
+  dragCoefficient: 1
+  StartingSpeed: 20
   GasOutflowSpeed: 900
   FuelMass: 0.25
   FuelBurningTime: 1.5
   deltaTime: 0.5
-  ShotDirection: 2
-  liveTime: 80
+  ShotDirection: 0
+  liveTime: 15
   updateMode: 0

@@ -9,10 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0bbad8e565ddf34b9aac013fc6ca4a3, type: 3}
-  m_Name: AtmosphereProperties
+  m_Script: {fileID: 11500000, guid: c4154ba8c2ed8f742b0b77e7bac85fec, type: 3}
+  m_Name: Grenade
   m_EditorClassIdentifier: 
-  Temperature: 288.2
-  Pressure: 101325
-  Humidity: 0
-  Density: 1.225
+  Weight: 1
+  Area: 0.1
+  dragCoefficient: 0.5
+  StartingSpeed: 30
+  GasOutflowSpeed: 0
+  FuelMass: 0
+  FuelBurningTime: 0
+  deltaTime: 0.5
+  ShotDirection: 0
+  liveTime: 15
+  updateMode: 0

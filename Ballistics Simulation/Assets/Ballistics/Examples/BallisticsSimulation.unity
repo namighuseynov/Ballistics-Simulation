@@ -559,8 +559,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UseGravity: 1
-  UseDrag: 0
-  UseWindForce: 0
+  UseDrag: 1
+  UseWindForce: 1
   UseThrust: 1
 --- !u!114 &918245475
 MonoBehaviour:
@@ -575,7 +575,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _projectileSpawnPoint: {fileID: 1108704817}
-  _projectileProps: {fileID: 11400000, guid: acaaacfcd837ac54488d59f6442435d8, type: 2}
+  _projectileProps: {fileID: 11400000, guid: d8f4d735c0c344b4680eff40455bce4f, type: 2}
   _ballCalculator: {fileID: 918245477}
   timeStep: 0.01
   maxTime: 1000
@@ -691,8 +691,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edc8252c1ff1faa43a0c0e5c83a50bc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _atmosphereProperties: {fileID: 11400000, guid: a94beb36648a2a642a1625e6c8c26c97, type: 2}
-  _projectileProperties: {fileID: 11400000, guid: acaaacfcd837ac54488d59f6442435d8, type: 2}
+  _atmosphereProperties: {fileID: 11400000, guid: a365c20c75f583b4aab6598ed606be8f, type: 2}
+  _projectileProperties: {fileID: 11400000, guid: d8f4d735c0c344b4680eff40455bce4f, type: 2}
   _wind: {fileID: 280099813}
 --- !u!114 &918245478
 MonoBehaviour:
@@ -916,7 +916,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1377947139}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.4804764, y: 4.58, z: 0.78}
+  m_LocalPosition: {x: -11.06, y: 4.58, z: 2.13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
