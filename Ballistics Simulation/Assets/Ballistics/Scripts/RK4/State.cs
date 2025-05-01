@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace BallisticsSimulation
@@ -70,6 +71,13 @@ namespace BallisticsSimulation
             s._vz *= scalar;
             return s;
         }
+
+        public State Sub(State o) =>
+            new State(X - o.X, Y - o.Y, Z - o.Z, Vx - o.Vx, Vy - o.Vy, Vz - o.Vz);
+
+        public double Magnitude() =>
+            Math.Sqrt(X * X + Y * Y + Z * Z + Vx * Vx + Vy * Vy + Vz * Vz);
+
         #endregion
     }
 }

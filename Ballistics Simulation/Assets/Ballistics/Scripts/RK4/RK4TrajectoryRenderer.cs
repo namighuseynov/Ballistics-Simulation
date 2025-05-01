@@ -7,7 +7,8 @@ namespace BallisticsSimulation
     public class RK4TrajectoryRenderer : MonoBehaviour
     {
         #region Fields
-        [SerializeField] private RK4BallisticsHandler _calculator;
+        [SerializeField] private RK4BallisticsHandler _rk4Calculator;
+        
         private LineRenderer _lineRenderer;
         private List<Vector3> _corners = new List<Vector3>();
 
@@ -16,11 +17,11 @@ namespace BallisticsSimulation
         #region Methods
         private void Start()
         {
-            _calculator = GetComponent<RK4BallisticsHandler>();
+            _rk4Calculator = GetComponent<RK4BallisticsHandler>();
             _lineRenderer = GetComponent<LineRenderer>();
-            if (_calculator == null)
+            if (_rk4Calculator == null)
             {
-                _calculator = FindAnyObjectByType<RK4BallisticsHandler>();
+                _rk4Calculator = FindAnyObjectByType<RK4BallisticsHandler>();
             }
         }
         private void Update()
@@ -34,10 +35,10 @@ namespace BallisticsSimulation
         private void RenderTrajectory()
         {
             _corners.Clear();
-            var corners = _calculator.trajectory;
+            var corners = _rk4Calculator.trajectory;
             for (int i = 0; i < corners.Count; i++)
             {
-                Vector3 newCorner = _calculator.StraightVector * (float)corners[i].X + Vector3.up* (float)corners[i].Y + _calculator.RightVector* (float)corners[i].Z;
+                Vector3 newCorner = _rk4Calculator.StraightVector * (float)corners[i].X + Vector3.up* (float)corners[i].Y + _rk4Calculator.RightVector* (float)corners[i].Z;
 
                 _corners.Add(newCorner);
             }
@@ -49,11 +50,11 @@ namespace BallisticsSimulation
 
         private void DrawVectors()
         {
-            Debug.DrawLine(_calculator.transform.position, _calculator.DirectionVector, Color.blue);
-            Debug.DrawLine(_calculator.transform.position, Vector3.up, Color.yellow);
+            Debug.DrawLine(_rk4Calculator.transform.position, _rk4Calculator.DirectionVector, Color.blue);
+            Debug.DrawLine(_rk4Calculator.transform.position, Vector3.up, Color.yellow);
 
-            Debug.DrawLine(_calculator.transform.position, _calculator.StraightVector, Color.red);
-            Debug.DrawLine(_calculator.transform.position, _calculator.RightVector, Color.green);
+            Debug.DrawLine(_rk4Calculator.transform.position, _rk4Calculator.StraightVector, Color.red);
+            Debug.DrawLine(_rk4Calculator.transform.position, _rk4Calculator.RightVector, Color.green);
         }
         #endregion
     }
