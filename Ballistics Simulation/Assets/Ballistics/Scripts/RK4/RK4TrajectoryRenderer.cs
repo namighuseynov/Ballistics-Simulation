@@ -20,7 +20,7 @@ namespace BallisticsSimulation
             _lineRenderer = GetComponent<LineRenderer>();
             if (_calculator == null)
             {
-                _calculator = GameObject.FindAnyObjectByType<RK4BallisticsHandler>();
+                _calculator = FindAnyObjectByType<RK4BallisticsHandler>();
             }
         }
         private void Update()
@@ -34,10 +34,10 @@ namespace BallisticsSimulation
         private void RenderTrajectory()
         {
             _corners.Clear();
-            var corners = _calculator.Trajectories;
+            var corners = _calculator.trajectory;
             for (int i = 0; i < corners.Count; i++)
             {
-                Vector3 newCorner = _calculator.StraghtVector* (float)corners[i].X + Vector3.up* (float)corners[i].Y + Vector3.right* (float)corners[i].Z;
+                Vector3 newCorner = _calculator.StraightVector * (float)corners[i].X + Vector3.up* (float)corners[i].Y + _calculator.RightVector* (float)corners[i].Z;
 
                 _corners.Add(newCorner);
             }
@@ -52,7 +52,7 @@ namespace BallisticsSimulation
             Debug.DrawLine(_calculator.transform.position, _calculator.DirectionVector, Color.blue);
             Debug.DrawLine(_calculator.transform.position, Vector3.up, Color.yellow);
 
-            Debug.DrawLine(_calculator.transform.position, _calculator.StraghtVector, Color.red);
+            Debug.DrawLine(_calculator.transform.position, _calculator.StraightVector, Color.red);
             Debug.DrawLine(_calculator.transform.position, _calculator.RightVector, Color.green);
         }
         #endregion

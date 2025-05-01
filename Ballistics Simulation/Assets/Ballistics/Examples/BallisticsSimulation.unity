@@ -151,7 +151,7 @@ WindZone:
   m_Mode: 0
   m_Radius: 20
   m_WindMain: 1
-  m_WindTurbulence: 1
+  m_WindTurbulence: 0
   m_WindPulseMagnitude: 0.5
   m_WindPulseFrequency: 0.01
 --- !u!4 &280099814
@@ -1020,7 +1020,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1377947140
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1210,18 +1210,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 550c5cfab7e1dbe469425014b118bad2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _useGravity: 1
-  _useDrag: 1
-  _useWind: 1
-  windAffectsDrag: 0
-  _direction: 2
-  startSpeed: 25
-  dragCoefficent: 0.5
-  airDensity: 1.2
-  area: 0.05
-  mass: 1
-  stepSize: 0.10000000149011612
+  _ballisticsProps: {fileID: 11400000, guid: 74e354b7eb58b5f4caf559f6e604d2bc, type: 2}
+  stepSize: 0.03
   maxSteps: 10000
-  Trajectories: []
+  trajectory: []
   _windZone: {fileID: 280099813}
-  _windVelocity: {x: 5, y: 0, z: 0}
