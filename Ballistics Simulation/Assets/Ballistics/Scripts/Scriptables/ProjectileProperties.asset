@@ -15,7 +15,7 @@ MonoBehaviour:
   Weight: 1
   Area: 0.0056
   dragCoefficient: 1
-  StartingSpeed: 20
+  StartingSpeed: 27.67
   GasOutflowSpeed: 900
   FuelMass: 0.25
   FuelBurningTime: 1.5
