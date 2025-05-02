@@ -9,12 +9,15 @@ namespace BallisticsSimulation
         private RK4BallisticsHandler _solver;
         private Transform _origin;
         [SerializeField] private GameObject _explosionEffect;
+        private Vector3 _startPosition = Vector3.zero;
 
         public void Init(RK4BallisticsHandler solver, Transform shotOrigin)
         {
             _solver = solver;
             _origin = shotOrigin;
             StartCoroutine(Fly());
+            _startPosition = _origin.position;
+            _startPosition.y = 0;
         }
 
         private IEnumerator Fly()
@@ -47,8 +50,7 @@ namespace BallisticsSimulation
             }
 
             Vector3 LocalToWorld(State s) =>
-                _origin.position
-              + straight * (float)s.X
+                straight * (float)s.X
               + Vector3.up * (float)s.Y
               + right * (float)s.Z;
         }
@@ -59,6 +61,10 @@ namespace BallisticsSimulation
             {
                 GameObject explosion = Instantiate(_explosionEffect);
                 explosion.transform.position = transform.position;
+
+                Vector3 finishPosition = transform.position;
+                finishPosition.y = 0;
+                Debug.Log(Vector3.Distance(_startPosition, finishPosition));
             }
         }
     }

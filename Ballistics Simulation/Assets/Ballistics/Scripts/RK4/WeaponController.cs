@@ -7,6 +7,7 @@ namespace BallisticsSimulation.RK4
         #region Fields
         [SerializeField] private RK4BallisticsHandler _rk4Handler;
         [SerializeField] private GameObject _rkProjectilePrefab;
+        [SerializeField] private Transform _shotOrigin;
         #endregion
 
         #region Unity loop
@@ -33,7 +34,7 @@ namespace BallisticsSimulation.RK4
             projectileGO.transform.rotation = transform.rotation;
 
             if (projectileGO.TryGetComponent(out RK4Projectile proj))
-                proj.Init(_rk4Handler, transform);
+                proj.Init(_rk4Handler, _shotOrigin);
         }
         #endregion
     }

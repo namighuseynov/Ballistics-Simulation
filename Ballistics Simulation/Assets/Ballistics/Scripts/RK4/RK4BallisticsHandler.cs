@@ -53,7 +53,7 @@ namespace BallisticsSimulation
             _trajectory.Clear();
 
             State state = new State(
-                0, 0, 0,
+                0, transform.position.y, 0,
                 _ballisticsProps.startSpeed * Math.Cos(angleRad),
                 _ballisticsProps.startSpeed * Math.Sin(angleRad),
                 0
