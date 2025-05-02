@@ -35,7 +35,7 @@ namespace BallisticsSimulation
         private void RenderTrajectory()
         {
             _corners.Clear();
-            var corners = _rk4Calculator.trajectory;
+            var corners = _rk4Calculator.Trajectory;
             for (int i = 0; i < corners.Count; i++)
             {
                 Vector3 newCorner = _rk4Calculator.StraightVector * (float)corners[i].X + Vector3.up* (float)corners[i].Y + _rk4Calculator.RightVector* (float)corners[i].Z;
@@ -44,8 +44,6 @@ namespace BallisticsSimulation
             }
             _lineRenderer.positionCount = _corners.Count;
             _lineRenderer.SetPositions(_corners.ToArray());
-
-            Debug.Log("Distance: " + corners[corners.Count - 1].X);
         }
 
         private void DrawVectors()

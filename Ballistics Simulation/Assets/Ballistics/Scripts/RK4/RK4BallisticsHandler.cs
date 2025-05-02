@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,11 +11,12 @@ namespace BallisticsSimulation
         [SerializeField] private BallisticsProperties _ballisticsProps;
 
         [Header("RK4")]
-        public double stepSize = 0.1f;
-        public int maxSteps = 10000;
+        [SerializeField] private bool _runtimeCalculate = true;
+        [SerializeField] private double stepSize = 0.1f;
+        [SerializeField] private int maxSteps = 10000;
 
-        [Header("Trajectory")]
-        public List<State> trajectory = new List<State>();
+        [Header("Trajectory (read‑only)")]
+        private readonly List<State> _trajectory = new();
         private Vector3 _directionVector = Vector3.zero;
         private Vector3 _straightVector = Vector3.zero;
         private Vector3 _rightVector = Vector3.zero;
@@ -24,18 +25,32 @@ namespace BallisticsSimulation
         [SerializeField] private WindZone _windZone;
         #endregion
 
-        #region Methods
-
+        #region Unity loop
         private void FixedUpdate()
         {
-            CalculateTrajectory();
+            if (_runtimeCalculate)
+                Recalculate();
         }
+        #endregion
 
+        #region Public API
+        public IReadOnlyList<State> Trajectory => _trajectory;
+
+        public double StepSize => stepSize;
+
+        public Vector3 StraightVector => _straightVector;
+        public Vector3 RightVector => _rightVector;
+        public Vector3 DirectionVector => _directionVector;
+
+        public void Recalculate() => CalculateTrajectory();
+        #endregion
+
+        #region Core math
         private void CalculateTrajectory()
         {
             double angleRad = GetAngle();
             int counter = 0;
-            trajectory.Clear();
+            _trajectory.Clear();
 
             State state = new State(
                 0, 0, 0,
@@ -43,19 +58,22 @@ namespace BallisticsSimulation
                 _ballisticsProps.startSpeed * Math.Sin(angleRad),
                 0
             );
-            trajectory.Add(new State(state));
+            _trajectory.Add(new State(state));
 
             while (counter < maxSteps && state.Y >= 0.0)
             {
                 State k1 = Derivatives(state);
-                State k2 = Derivatives(state.Add(k1.Dot(stepSize*0.5)));
+                State k2 = Derivatives(state.Add(k1.Dot(stepSize * 0.5)));
                 State k3 = Derivatives(state.Add(k2.Dot(stepSize * 0.5)));
                 State k4 = Derivatives(state.Add(k3.Dot(stepSize)));
 
-                State delta = (k1.Add(k2.Dot(2)).Add(k3.Dot(2)).Add(k4)).Dot(stepSize / 6.0);
-                state = state.Add(delta);
+                State delta = (k1.Add(k2.Dot(2))
+                                 .Add(k3.Dot(2))
+                                 .Add(k4))
+                               .Dot(stepSize / 6.0);
 
-                trajectory.Add(new State(state));
+                state = state.Add(delta);
+                _trajectory.Add(new State(state));
                 counter++;
             }
         }
@@ -64,47 +82,47 @@ namespace BallisticsSimulation
         {
             if (_ballisticsProps.mass == 0) _ballisticsProps.mass = 0.001;
 
-            Vector3 vWorld = _straightVector * (float)s.Vx + Vector3.up * (float)s.Vy + _rightVector * (float)s.Vz;
+            Vector3 vWorld = _straightVector * (float)s.Vx
+                           + Vector3.up * (float)s.Vy
+                           + _rightVector * (float)s.Vz;
+
             Vector3 vRel = vWorld - (_ballisticsProps.useWind ? GetWind() : Vector3.zero);
 
             double vMag = vRel.magnitude;
-            double dragFactor = _ballisticsProps.airDensity * _ballisticsProps.dragCoefficent * _ballisticsProps.area * 0.5;
-            Vector3 dragAcc = _ballisticsProps.useDrag ? -(float)(dragFactor/_ballisticsProps.mass) * (float)vMag * vRel : Vector3.zero;
-            Vector3 gravity = _ballisticsProps.useGravity ? new Vector3(0, -9.81f, 0) : Vector3.zero;
+            double dragFactor = _ballisticsProps.airDensity
+                              * _ballisticsProps.dragCoefficent
+                              * _ballisticsProps.area * 0.5;
 
+            Vector3 dragAcc = _ballisticsProps.useDrag
+                            ? -(float)(dragFactor / _ballisticsProps.mass) * (float)vMag * vRel
+                            : Vector3.zero;
+
+            Vector3 gravity = _ballisticsProps.useGravity ? new Vector3(0, -9.81f, 0) : Vector3.zero;
             Vector3 accWorld = gravity + dragAcc;
 
-            double ax = Vector3.Dot(accWorld, StraightVector);
+            double ax = Vector3.Dot(accWorld, _straightVector);
             double ay = Vector3.Dot(accWorld, Vector3.up);
-            double az = Vector3.Dot(accWorld, RightVector);
+            double az = Vector3.Dot(accWorld, _rightVector);
 
-            return new State(
-                s.Vx,
-                s.Vy,
-                s.Vz,
-                ax,
-                ay,
-                az);
+            return new State(s.Vx, s.Vy, s.Vz, ax, ay, az);
         }
+        #endregion
 
+        #region Helpers
         private double GetAngle()
         {
-            if (Direction == AxisDirection.Forward)
+            _directionVector = Direction switch
             {
-                _directionVector = transform.forward;
-            }
-            else if (Direction == AxisDirection.Right)
-            {
-                _directionVector = transform.right;
-            }
-            else
-            {
-                _directionVector = transform.up;
-            }
+                AxisDirection.Right => transform.right,
+                AxisDirection.Up => transform.up,
+                _ => transform.forward,
+            };
+
             _straightVector = new Vector3(_directionVector.x, 0, _directionVector.z).normalized;
             _rightVector = -Vector3.Cross(_straightVector, _directionVector);
+
             double angle = Vector3.Angle(_directionVector, _straightVector);
-            return Math.PI * angle / 180;
+            return angle * Mathf.Deg2Rad;
         }
 
         private Vector3 GetWind()
@@ -112,24 +130,19 @@ namespace BallisticsSimulation
             Vector3 main = _windZone.transform.forward;
 
             Vector3 turbDir = Quaternion.AngleAxis(
-                UnityEngine.Random.Range(0f, 360f),
-                Vector3.up                    
-            ) * main;
+                                  UnityEngine.Random.Range(0f, 360f),
+                                  Vector3.up) * main;
 
             float windSpeed = _windZone.windMain;
-            float turbulenceAbs = _windZone.windTurbulence *
-                                  UnityEngine.Random.Range(-1f, 1f);
+            float turbulenceAbs = _windZone.windTurbulence
+                                * UnityEngine.Random.Range(-1f, 1f);
 
             return main * windSpeed + turbDir * turbulenceAbs;
         }
         #endregion
 
         #region Properties
-        public AxisDirection Direction { get { return _ballisticsProps.axisDirection; } }
-        public Vector3 DirectionVector { get { return _directionVector; } }
-        public Vector3 StraightVector { get { return _straightVector; } }
-        public Vector3 RightVector { get { return _rightVector; } }
+        public AxisDirection Direction => _ballisticsProps.axisDirection;
         #endregion
-
     }
 }
