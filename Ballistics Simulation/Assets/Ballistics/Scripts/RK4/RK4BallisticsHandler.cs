@@ -26,6 +26,14 @@ namespace BallisticsSimulation
         #endregion
 
         #region Unity loop
+
+        private void Start()
+        {
+            if (_windZone == null)
+            {
+                _windZone = FindAnyObjectByType<WindZone>();
+            }
+        }
         private void FixedUpdate()
         {
             if (_runtimeCalculate)

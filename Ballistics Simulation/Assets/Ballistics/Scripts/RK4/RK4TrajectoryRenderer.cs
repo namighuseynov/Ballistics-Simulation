@@ -34,25 +34,35 @@ namespace BallisticsSimulation
         }
         private void RenderTrajectory()
         {
-            _corners.Clear();
-            var corners = _rk4Calculator.Trajectory;
-            for (int i = 0; i < corners.Count; i++)
+            if (_rk4Calculator != null)
             {
-                Vector3 newCorner = _rk4Calculator.StraightVector * (float)corners[i].X + Vector3.up* (float)corners[i].Y + _rk4Calculator.RightVector* (float)corners[i].Z;
+                _corners.Clear();
+                var corners = _rk4Calculator.Trajectory;
+                for (int i = 0; i < corners.Count; i++)
+                {
+                    Vector3 newCorner = _rk4Calculator.StraightVector * (float)corners[i].X + Vector3.up * (float)corners[i].Y + _rk4Calculator.RightVector * (float)corners[i].Z;
 
-                _corners.Add(newCorner);
+                    _corners.Add(newCorner);
+                }
+                _lineRenderer.positionCount = _corners.Count;
+                _lineRenderer.SetPositions(_corners.ToArray());
             }
-            _lineRenderer.positionCount = _corners.Count;
-            _lineRenderer.SetPositions(_corners.ToArray());
+            else
+            {
+                Debug.LogWarning("You need to assign RK Handler!");
+            }
         }
 
         private void DrawVectors()
         {
-            Debug.DrawLine(_rk4Calculator.transform.position, _rk4Calculator.DirectionVector, Color.blue);
-            Debug.DrawLine(_rk4Calculator.transform.position, Vector3.up, Color.yellow);
+            if (_rk4Calculator != null)
+            {
+                Debug.DrawLine(_rk4Calculator.transform.position, _rk4Calculator.DirectionVector, Color.blue);
+                Debug.DrawLine(_rk4Calculator.transform.position, Vector3.up, Color.yellow);
 
-            Debug.DrawLine(_rk4Calculator.transform.position, _rk4Calculator.StraightVector, Color.red);
-            Debug.DrawLine(_rk4Calculator.transform.position, _rk4Calculator.RightVector, Color.green);
+                Debug.DrawLine(_rk4Calculator.transform.position, _rk4Calculator.StraightVector, Color.red);
+                Debug.DrawLine(_rk4Calculator.transform.position, _rk4Calculator.RightVector, Color.green);
+            }
         }
         #endregion
     }

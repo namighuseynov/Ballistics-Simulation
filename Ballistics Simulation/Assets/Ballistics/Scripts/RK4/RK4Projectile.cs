@@ -66,7 +66,6 @@ namespace BallisticsSimulation
 
                 Vector3 finishPosition = transform.position;
                 finishPosition.y = 0;
-                Debug.Log(Vector3.Distance(_startPosition, finishPosition));
                 Destroy(gameObject);
             }
         }
