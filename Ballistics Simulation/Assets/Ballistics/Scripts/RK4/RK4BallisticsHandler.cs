@@ -121,8 +121,10 @@ namespace BallisticsSimulation
             _straightVector = new Vector3(_directionVector.x, 0, _directionVector.z).normalized;
             _rightVector = -Vector3.Cross(_straightVector, _directionVector);
 
+            int sign = MathF.Sign(_directionVector.y);
+
             double angle = Vector3.Angle(_directionVector, _straightVector);
-            return angle * Mathf.Deg2Rad;
+            return angle * Mathf.Deg2Rad * sign;
         }
 
         private Vector3 GetWind()
