@@ -9,6 +9,7 @@ namespace BallisticsSimulation
         #region Fields
         [Header("Ballistics")]
         [SerializeField] private BallisticsProperties _ballisticsProps;
+        [SerializeField] private Transform _origin;
 
         [Header("RK4")]
         [SerializeField] private bool _runtimeCalculate = true;
@@ -61,7 +62,7 @@ namespace BallisticsSimulation
             _trajectory.Clear();
 
             State state = new State(
-                0, transform.position.y, 0,
+                0, _origin.position.y, 0,
                 _ballisticsProps.startSpeed * Math.Cos(angleRad),
                 _ballisticsProps.startSpeed * Math.Sin(angleRad),
                 0
@@ -121,9 +122,9 @@ namespace BallisticsSimulation
         {
             _directionVector = Direction switch
             {
-                AxisDirection.Right => transform.right,
-                AxisDirection.Up => transform.up,
-                _ => transform.forward,
+                AxisDirection.Right => _origin.right,
+                AxisDirection.Up => _origin.up,
+                _ => _origin.forward,
             };
 
             _straightVector = new Vector3(_directionVector.x, 0, _directionVector.z).normalized;

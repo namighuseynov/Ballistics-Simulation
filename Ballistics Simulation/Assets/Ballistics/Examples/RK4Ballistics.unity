@@ -401,12 +401,17 @@ Transform:
   m_Children:
   - {fileID: 451528208}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &705507994 stripped
 Light:
   m_CorrespondingSourceObject: {fileID: 3924237417740886278, guid: edf90981305f3fe408f8a2656c0b34a1, type: 3}
   m_PrefabInstance: {fileID: 3924237418377565084}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1869922665 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1995777253960892658, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
+  m_PrefabInstance: {fileID: 1995777254718701979}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1995777254718701979
 PrefabInstance:
@@ -415,6 +420,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6987523785658868417, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
+      propertyPath: _origin
+      value: 
+      objectReference: {fileID: 1869922665}
     - target: {fileID: 6987523785658868417, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
       propertyPath: _windZone
       value: 
@@ -537,9 +546,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4667996054974326051, guid: 6600011e80d56c44f9007349e9f993a9, type: 3}
+      propertyPath: _gunOrigin
+      value: 
+      objectReference: {fileID: 1869922665}
+    - target: {fileID: 4667996054974326051, guid: 6600011e80d56c44f9007349e9f993a9, type: 3}
+      propertyPath: _drawBaseVectors
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4667996054974326052, guid: 6600011e80d56c44f9007349e9f993a9, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4667996054974326052, guid: 6600011e80d56c44f9007349e9f993a9, type: 3}
       propertyPath: m_LocalPosition.x

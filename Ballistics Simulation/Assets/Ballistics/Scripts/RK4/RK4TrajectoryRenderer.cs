@@ -8,9 +8,11 @@ namespace BallisticsSimulation
     {
         #region Fields
         [SerializeField] private RK4BallisticsHandler _rk4Calculator;
+        [SerializeField] private bool _drawBaseVectors = true;
         
         private LineRenderer _lineRenderer;
         private List<Vector3> _corners = new List<Vector3>();
+        [SerializeField] private Transform _gunOrigin;
 
         #endregion
 
@@ -40,7 +42,9 @@ namespace BallisticsSimulation
                 var corners = _rk4Calculator.Trajectory;
                 for (int i = 0; i < corners.Count; i++)
                 {
-                    Vector3 newCorner = _rk4Calculator.StraightVector * (float)corners[i].X + Vector3.up * (float)corners[i].Y + _rk4Calculator.RightVector * (float)corners[i].Z;
+                    Vector3 origin = _gunOrigin.position;
+                    origin.y = 0;
+                    Vector3 newCorner = origin + _rk4Calculator.StraightVector * (float)corners[i].X + Vector3.up * (float)corners[i].Y + _rk4Calculator.RightVector * (float)corners[i].Z;
 
                     _corners.Add(newCorner);
                 }
@@ -55,13 +59,13 @@ namespace BallisticsSimulation
 
         private void DrawVectors()
         {
-            if (_rk4Calculator != null)
+            if (_gunOrigin != null && _rk4Calculator != null && _drawBaseVectors)
             {
-                Debug.DrawLine(_rk4Calculator.transform.position, _rk4Calculator.DirectionVector, Color.blue);
-                Debug.DrawLine(_rk4Calculator.transform.position, Vector3.up, Color.yellow);
+                Debug.DrawLine(_gunOrigin.position, _gunOrigin.position + _rk4Calculator.DirectionVector, Color.blue);
+                Debug.DrawLine(_gunOrigin.position, _gunOrigin.position + Vector3.up, Color.yellow);
 
-                Debug.DrawLine(_rk4Calculator.transform.position, _rk4Calculator.StraightVector, Color.red);
-                Debug.DrawLine(_rk4Calculator.transform.position, _rk4Calculator.RightVector, Color.green);
+                Debug.DrawLine(_gunOrigin.position, _gunOrigin.position + _rk4Calculator.StraightVector, Color.red);
+                Debug.DrawLine(_gunOrigin.position, _gunOrigin.position + _rk4Calculator.RightVector, Color.green);
             }
         }
         #endregion

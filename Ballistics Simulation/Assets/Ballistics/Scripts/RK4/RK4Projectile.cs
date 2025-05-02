@@ -52,6 +52,7 @@ namespace BallisticsSimulation
             }
 
             Vector3 LocalToWorld(State s) =>
+                (new Vector3(_origin.position.x, 0, _origin.position.z)) +
                 straight * (float)s.X
               + Vector3.up * (float)s.Y
               + right * (float)s.Z;
