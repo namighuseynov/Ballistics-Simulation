@@ -10,6 +10,7 @@ namespace BallisticsSimulation
         private Transform _origin;
         [SerializeField] private GameObject _explosionEffect;
         private Vector3 _startPosition = Vector3.zero;
+        private float _lifeTime = 15;
 
         public void Init(RK4BallisticsHandler solver, Transform shotOrigin)
         {
@@ -18,6 +19,7 @@ namespace BallisticsSimulation
             StartCoroutine(Fly());
             _startPosition = _origin.position;
             _startPosition.y = 0;
+            Destroy(gameObject, _lifeTime);
         }
 
         private IEnumerator Fly()
@@ -65,6 +67,7 @@ namespace BallisticsSimulation
                 Vector3 finishPosition = transform.position;
                 finishPosition.y = 0;
                 Debug.Log(Vector3.Distance(_startPosition, finishPosition));
+                Destroy(gameObject);
             }
         }
     }

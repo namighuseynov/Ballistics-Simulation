@@ -17,9 +17,9 @@ namespace BallisticsSimulation.RK4
                 _rk4Handler = FindAnyObjectByType<RK4BallisticsHandler>();
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
-            if (Input.GetMouseButtonDown(0) && _rk4Handler != null)
+            if (Input.GetMouseButtonDown(0))
                 Shot();
         }
         #endregion
@@ -27,14 +27,17 @@ namespace BallisticsSimulation.RK4
         #region Shooting
         private void Shot()
         {
-            _rk4Handler.Recalculate();
+            if (_rk4Handler != null)
+            {
+                _rk4Handler.Recalculate();
 
-            var projectileGO = Instantiate(_rkProjectilePrefab);
-            projectileGO.transform.position = transform.position;
-            projectileGO.transform.rotation = transform.rotation;
+                var projectileGO = Instantiate(_rkProjectilePrefab);
+                projectileGO.transform.position = transform.position;
+                projectileGO.transform.rotation = transform.rotation;
 
-            if (projectileGO.TryGetComponent(out RK4Projectile proj))
-                proj.Init(_rk4Handler, _shotOrigin);
+                if (projectileGO.TryGetComponent(out RK4Projectile proj))
+                    proj.Init(_rk4Handler, _shotOrigin);
+            }
         }
         #endregion
     }
