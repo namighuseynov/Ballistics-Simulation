@@ -124,7 +124,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7760682304216397945}
   - component: {fileID: 6987523785658868418}
-  - component: {fileID: 6987523785658868417}
+  - component: {fileID: 1923373908735258710}
   m_Layer: 0
   m_Name: RPG 7V2
   m_TagString: Untagged
@@ -140,7 +140,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6987523785658868419}
   m_LocalRotation: {x: -0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0.759, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -161,10 +161,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91d6be11b166ef14a9497f1f44921009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rk4Handler: {fileID: 6987523785658868417}
+  _handler: {fileID: 0}
   _rkProjectilePrefab: {fileID: 4766259203224675503, guid: d599b88912b60b1408f5f48824fc543a, type: 3}
   _shotOrigin: {fileID: 1995777253960892658}
---- !u!114 &6987523785658868417
+--- !u!114 &1923373908735258710
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -173,11 +173,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 6987523785658868419}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 550c5cfab7e1dbe469425014b118bad2, type: 3}
+  m_Script: {fileID: 11500000, guid: bd8dbd7bc57deba4a93d32ca81f07410, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _ballisticsProps: {fileID: 11400000, guid: 74e354b7eb58b5f4caf559f6e604d2bc, type: 2}
+  _origin: {fileID: 1995777253960892658}
+  _integrationMethod: 0
   _runtimeCalculate: 1
-  stepSize: 0.0100000001490116
+  stepSize: 0.10000000149011612
   maxSteps: 10000
+  eps: 0.0001
+  hMin: 0.0001
+  hMax: 0.1
   _windZone: {fileID: 0}

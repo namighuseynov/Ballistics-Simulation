@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4667996054974326053
+--- !u!1 &2509908746730117263
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4667996054974326052}
-  - component: {fileID: 4667996054974326050}
-  - component: {fileID: 4667996054974326051}
+  - component: {fileID: 2509908746730117262}
+  - component: {fileID: 2509908746730117256}
+  - component: {fileID: 2509908746730117257}
   m_Layer: 0
-  m_Name: RK4Trajectory
+  m_Name: TrajectoryRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4667996054974326052
+--- !u!4 &2509908746730117262
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4667996054974326053}
+  m_GameObject: {fileID: 2509908746730117263}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -33,13 +33,13 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!120 &4667996054974326050
+--- !u!120 &2509908746730117256
 LineRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4667996054974326053}
+  m_GameObject: {fileID: 2509908746730117263}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -132,16 +132,18 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
---- !u!114 &4667996054974326051
+--- !u!114 &2509908746730117257
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4667996054974326053}
+  m_GameObject: {fileID: 2509908746730117263}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d8a051fbd84e0942ba4f4429bcacc3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rk4Calculator: {fileID: 0}
+  _handler: {fileID: 0}
+  _drawBaseVectors: 0
+  _gunOrigin: {fileID: 0}

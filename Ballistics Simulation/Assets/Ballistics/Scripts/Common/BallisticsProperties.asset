@@ -16,7 +16,7 @@ MonoBehaviour:
   useDrag: 1
   useWind: 1
   axisDirection: 2
-  startSpeed: 120
+  startSpeed: 25
   dragCoefficent: 0.75
   airDensity: 1.225
   area: 0.009

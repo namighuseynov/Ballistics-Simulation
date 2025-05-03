@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BallisticsSimulation
 {
-    public class RKF45BallisticsHandler : Handler
+    public class RKF45BallisticsHandler : MonoBehaviour
     {
         #region Fields
         [Header("Ballistics")]
