@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _explosionEffect: {fileID: 1000011797152326, guid: acf39d9f4addf294d93fa56fa373961b, type: 3}
+  _lifeTime: 500
 --- !u!65 &449306162624046566
 BoxCollider:
   m_ObjectHideFlags: 0

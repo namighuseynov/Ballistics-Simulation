@@ -6,16 +6,22 @@ namespace BallisticsSimulation
     public class BallisticsProperties : ScriptableObject
     {
         [Header("Forces")]
-        public bool useGravity;
-        public bool useDrag;
-        public bool useWind;
-        public AxisDirection axisDirection;
+        public bool useGravity =                true;
+        public bool useDrag =                   false;
+        public bool useWind =                   false;
+        public AxisDirection axisDirection =    AxisDirection.Forward;
 
-        public double startSpeed;
-        public double dragCoefficent;
-        public double airDensity;
-        public double area;
-        public double mass;
+        public double startSpeed =              100;
+        public double dragCoefficent =          0.5;
+        public double airDensity =              1.255;
+        public double area =                    0.009;
+        public double mass =                    2;
+
+        [Header("Rocket motor")]
+        public bool useThrust =                 false;
+        public double thrustForce =             700;
+        public double ignitionDistance =        10;
+        public double burnDistance =            120;
 
     }
 }

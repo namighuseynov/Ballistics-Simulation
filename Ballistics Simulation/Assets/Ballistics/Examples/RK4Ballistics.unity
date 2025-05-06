@@ -284,11 +284,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1923373908735258710, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
       propertyPath: maxSteps
-      value: 100000
+      value: 1000000
       objectReference: {fileID: 0}
     - target: {fileID: 1923373908735258710, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
       propertyPath: stepSize
-      value: 0.001
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 1923373908735258710, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
       propertyPath: _windZone
@@ -296,7 +296,7 @@ PrefabInstance:
       objectReference: {fileID: 280099813}
     - target: {fileID: 1923373908735258710, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
       propertyPath: _enableLog
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1923373908735258710, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
       propertyPath: _runtimeCalculate
@@ -304,7 +304,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1923373908735258710, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
       propertyPath: _integrationMethod
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6987523785658868419, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
       propertyPath: m_Name
@@ -320,7 +320,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7760682304216397945, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7760682304216397945, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
       propertyPath: m_LocalPosition.z

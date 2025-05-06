@@ -10,7 +10,7 @@ namespace BallisticsSimulation.Common
         private Transform _origin;
         [SerializeField] private GameObject _explosionEffect;
         private Vector3 _startPosition = Vector3.zero;
-        private float _lifeTime = 15;
+        [SerializeField] private float _lifeTime = 15;
 
         public void Init(BallisticsHandler solver, Transform shotOrigin)
         {

@@ -192,6 +192,15 @@ namespace BallisticsSimulation
             Vector3 gravity = _ballisticsProps.useGravity ? new Vector3(0, -9.8066f, 0) : Vector3.zero;
             Vector3 accWorld = gravity + dragAcc;
 
+            if (_ballisticsProps.useThrust &&
+    s.X > _ballisticsProps.ignitionDistance &&
+    s.X < _ballisticsProps.ignitionDistance + _ballisticsProps.burnDistance)
+            {
+                Vector3 dir = vWorld.sqrMagnitude > 1e-6f ? vWorld.normalized : _straightVector;
+                Vector3 thrustAcc = (float)(_ballisticsProps.thrustForce / _ballisticsProps.mass) * dir;
+                accWorld += thrustAcc;
+            }
+
             double ax = Vector3.Dot(accWorld, _straightVector);
             double ay = Vector3.Dot(accWorld, Vector3.up);
             double az = Vector3.Dot(accWorld, _rightVector);
