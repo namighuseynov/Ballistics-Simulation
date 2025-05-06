@@ -276,11 +276,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1923373908735258710, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
       propertyPath: hMax
-      value: 0.01
+      value: 0.001
       objectReference: {fileID: 0}
     - target: {fileID: 1923373908735258710, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
       propertyPath: hMin
-      value: 0.00001
+      value: 0.0001
       objectReference: {fileID: 0}
     - target: {fileID: 1923373908735258710, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
       propertyPath: maxSteps
@@ -467,6 +467,30 @@ PrefabInstance:
     - target: {fileID: 3924237417881005079, guid: edf90981305f3fe408f8a2656c0b34a1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3924237418097617017, guid: edf90981305f3fe408f8a2656c0b34a1, type: 3}
+      propertyPath: m_WindTurbulence
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3924237418097617018, guid: edf90981305f3fe408f8a2656c0b34a1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3924237418097617018, guid: edf90981305f3fe408f8a2656c0b34a1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3924237418097617018, guid: edf90981305f3fe408f8a2656c0b34a1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3924237418097617018, guid: edf90981305f3fe408f8a2656c0b34a1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3924237418097617018, guid: edf90981305f3fe408f8a2656c0b34a1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: edf90981305f3fe408f8a2656c0b34a1, type: 3}
