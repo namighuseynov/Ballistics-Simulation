@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useGravity: 1
   useDrag: 1
-  useWind: 1
+  useWind: 0
   axisDirection: 2
-  startSpeed: 25
+  startSpeed: 100
   dragCoefficent: 0.75
   airDensity: 1.225
   area: 0.009

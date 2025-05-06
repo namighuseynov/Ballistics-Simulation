@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace BallisticsSimulation
@@ -16,7 +17,9 @@ namespace BallisticsSimulation
         [SerializeField] private bool _runtimeCalculate = true;
         [SerializeField] private double stepSize = 0.1f;
         [SerializeField] private int maxSteps = 10000;
+        [SerializeField] private bool _enableLog = false;
         private IIntegrator _integrator;
+        
 
         [Header("RK45 (Fehlberg)")]
         public double eps = 1e-4;  // local error
@@ -133,6 +136,38 @@ namespace BallisticsSimulation
                 hMin,
                 hMax
             );
+
+            if (_enableLog && !_runtimeCalculate)
+            {
+                List<string> logData = new List<string>();
+                double timeElapsed = 0f;
+                logData.Add("x,y,vx,vy,t");
+
+                for (int i = 0; i < _trajectory.Count; i++)
+                {
+                    var currentCorner = _trajectory[i];
+                    string line = string.Format("{0:F3},{1:F3},{2:F3},{3:F3},{4:F3}",
+                        currentCorner.X,
+                        currentCorner.Y,
+                        currentCorner.Vx,
+                        currentCorner.Vy,
+                        timeElapsed
+                        );
+                    logData.Add( line );
+                    timeElapsed += stepSize;
+                }
+                if (logData.Count > 0)
+                {
+                    string fileName = string.Empty;
+                    if (_integrationMethod == IntegrationMethod.Euler) fileName = "sim_Euler.csv";
+                    else if (_integrationMethod == IntegrationMethod.RK4) fileName = "sim_RK4.csv";
+                    else if (_integrationMethod == IntegrationMethod.RKF45) fileName = "sim_RKF45.csv";
+
+                    string filePath = Path.Combine(Application.dataPath, fileName);
+                    File.WriteAllLines(filePath, logData.ToArray());
+                    Debug.Log("CSV file was created at: " + filePath);
+                }
+            }
         }
 
         public State Derivatives(State s)
@@ -154,7 +189,7 @@ namespace BallisticsSimulation
                             ? -(float)(dragFactor / _ballisticsProps.mass) * (float)vMag * vRel
                             : Vector3.zero;
 
-            Vector3 gravity = _ballisticsProps.useGravity ? new Vector3(0, -9.81f, 0) : Vector3.zero;
+            Vector3 gravity = _ballisticsProps.useGravity ? new Vector3(0, -9.8066f, 0) : Vector3.zero;
             Vector3 accWorld = gravity + dragAcc;
 
             double ax = Vector3.Dot(accWorld, _straightVector);

@@ -55,6 +55,8 @@ namespace BallisticsSimulation
                 }
                 _lineRenderer.positionCount = _corners.Count;
                 _lineRenderer.SetPositions(_corners.ToArray());
+
+                if (_corners.Count > 0) Debug.Log(corners[corners.Count - 1].X);
             }
             else
             {
