@@ -123,7 +123,7 @@ namespace BallisticsSimulation
                 0, _origin.position.y, 0,
                 _ballisticsProps.startSpeed * Math.Cos(angleRad),
                 _ballisticsProps.startSpeed * Math.Sin(angleRad),
-                0
+                0, 0
             );
 
             _integrator = Create(_integrationMethod);
@@ -140,7 +140,6 @@ namespace BallisticsSimulation
             if (_enableLog && !_runtimeCalculate)
             {
                 List<string> logData = new List<string>();
-                double timeElapsed = 0f;
                 logData.Add("x,y,vx,vy,t");
 
                 for (int i = 0; i < _trajectory.Count; i++)
@@ -151,10 +150,9 @@ namespace BallisticsSimulation
                         currentCorner.Y,
                         currentCorner.Vx,
                         currentCorner.Vy,
-                        timeElapsed
+                        currentCorner.T
                         );
                     logData.Add( line );
-                    timeElapsed += stepSize;
                 }
                 if (logData.Count > 0)
                 {
@@ -205,7 +203,7 @@ namespace BallisticsSimulation
             double ay = Vector3.Dot(accWorld, Vector3.up);
             double az = Vector3.Dot(accWorld, _rightVector);
 
-            return new State(s.Vx, s.Vy, s.Vz, ax, ay, az);
+            return new State(s.Vx, s.Vy, s.Vz, ax, ay, az, 1.0);
         }
         #endregion
     }

@@ -24,6 +24,11 @@ namespace BallisticsSimulation
 
                 State delta = a.Dot(step);
                 state = state.Add(delta);
+
+                if (state.Y < 0)
+                {
+                    break;
+                }
                 trajectory.Add(new State(state));
                 counter++;
             }

@@ -83,6 +83,10 @@ namespace BallisticsSimulation
                 if (acceptStep)
                 {
                     state = y5;
+                    if (state.Y < 0)
+                    {
+                        break;
+                    }
                     trajectory.Add(new State(state));
                     counter++;
                 }

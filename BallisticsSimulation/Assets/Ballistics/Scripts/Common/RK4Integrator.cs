@@ -30,6 +30,10 @@ namespace BallisticsSimulation
                                  .Add(k4))
                                .Dot(step / 6.0);
 
+                if (state.Y < 0)
+                {
+                    break;
+                }
                 state = state.Add(delta);
                 trajectory.Add(new State(state));
                 counter++;

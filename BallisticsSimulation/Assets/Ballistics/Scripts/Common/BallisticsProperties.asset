@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BallisticsProperties
   m_EditorClassIdentifier: 
   useGravity: 1
-  useDrag: 0
+  useDrag: 1
   useWind: 0
   axisDirection: 2
   startSpeed: 40

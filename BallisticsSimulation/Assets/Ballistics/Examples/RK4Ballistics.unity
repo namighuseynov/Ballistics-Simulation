@@ -296,7 +296,7 @@ PrefabInstance:
       objectReference: {fileID: 280099813}
     - target: {fileID: 1923373908735258710, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
       propertyPath: _enableLog
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1923373908735258710, guid: 5316501cf09f7c14b9ae920c75a14a99, type: 3}
       propertyPath: _runtimeCalculate

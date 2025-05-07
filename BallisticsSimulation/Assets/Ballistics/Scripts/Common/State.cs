@@ -7,7 +7,7 @@ namespace BallisticsSimulation
     public class State
     {
         #region Consturctors
-        public State(double x, double y, double z, double vx, double vy, double vz)
+        public State(double x, double y, double z, double vx, double vy, double vz, double t)
         {
             _x = x; 
             _y = y;
@@ -15,6 +15,7 @@ namespace BallisticsSimulation
             _vx = vx;
             _vy = vy;
             _vz = vz;
+            _t = t;
         }
         public State(State s)
         {
@@ -24,6 +25,7 @@ namespace BallisticsSimulation
             _vx=s._vx;
             _vy=s._vy;
             _vz=s._vz;
+            _t = s._t;
         }
         #endregion
 
@@ -35,6 +37,7 @@ namespace BallisticsSimulation
         [SerializeField] private double _vx;
         [SerializeField] private double _vy;
         [SerializeField] private double _vz;
+        [SerializeField] private double _t;
         #endregion
 
         #region Properties
@@ -44,6 +47,7 @@ namespace BallisticsSimulation
         public double Vx { get { return _vx; } }
         public double Vy { get { return _vy; } }
         public double Vz { get { return _vz; } }
+        public double T { get { return _t; } }
         #endregion
 
         #region Methods
@@ -56,6 +60,7 @@ namespace BallisticsSimulation
             s._vx += other._vx;
             s._vy += other._vy;
             s._vz += other._vz;
+            s._t += other._t;        
             return s;
         }
 
@@ -65,15 +70,15 @@ namespace BallisticsSimulation
             s._x *= scalar;
             s._y *= scalar;
             s._z *= scalar;
-
             s._vx *= scalar;
             s._vy *= scalar;
             s._vz *= scalar;
+            s._t *= scalar;
             return s;
         }
 
         public State Sub(State o) =>
-            new State(X - o.X, Y - o.Y, Z - o.Z, Vx - o.Vx, Vy - o.Vy, Vz - o.Vz);
+            new State(X - o.X, Y - o.Y, Z - o.Z, Vx - o.Vx, Vy - o.Vy, Vz - o.Vz, 0);
 
         public double Magnitude() =>
             Math.Sqrt(X * X + Y * Y + Z * Z + Vx * Vx + Vy * Vy + Vz * Vz);

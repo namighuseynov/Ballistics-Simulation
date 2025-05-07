@@ -24,31 +24,37 @@ namespace BallisticsSimulation.Common
 
         private IEnumerator Fly()
         {
-            IReadOnlyList<State> path = _solver.Trajectory;
+            var path = _solver.Trajectory;
             if (path == null || path.Count < 2) yield break;
 
-            double dt = _solver.StepSize;
+            float simTime = 0f;     
+            int seg = 0;
+
             Vector3 straight = _solver.StraightVector;
             Vector3 right = _solver.RightVector;
 
-            for (int i = 1; i < path.Count; i++)
+            while (seg < path.Count - 1)
             {
-                Vector3 p0 = LocalToWorld(path[i - 1]);
-                Vector3 p1 = LocalToWorld(path[i]);
+                simTime += Time.deltaTime;
 
-                float t = 0f;
-                while (t < dt)
-                {
-                    t += Time.deltaTime;
-                    float k = Mathf.Clamp01((float)(t / dt));
-                    transform.position = Vector3.Lerp(p0, p1, k);
+                while (seg < path.Count - 1 && simTime >= (float)path[seg + 1].T)
+                    seg++;
 
-                    Vector3 dir = (p1 - p0).normalized;
-                    if (dir.sqrMagnitude > 0f)
-                        transform.rotation = Quaternion.LookRotation(dir, Vector3.up);
+                if (seg >= path.Count - 1) break;
 
-                    yield return null;
-                }
+                float t0 = (float)path[seg].T;
+                float t1 = (float)path[seg + 1].T;
+                float k = Mathf.InverseLerp(t0, t1, simTime);
+
+                Vector3 p0 = LocalToWorld(path[seg]);
+                Vector3 p1 = LocalToWorld(path[seg + 1]);
+
+                transform.position = Vector3.Lerp(p0, p1, k);
+                Vector3 dir = (p1 - p0).normalized;
+                if (dir.sqrMagnitude > 0f)
+                    transform.rotation = Quaternion.LookRotation(dir, Vector3.up);
+
+                yield return null;
             }
 
             Vector3 LocalToWorld(State s) =>
