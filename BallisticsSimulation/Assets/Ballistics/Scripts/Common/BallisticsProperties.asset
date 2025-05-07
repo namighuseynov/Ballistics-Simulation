@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useGravity: 1
   useDrag: 1
-  useWind: 0
+  useWind: 1
   axisDirection: 2
   startSpeed: 40
   dragCoefficent: 0.75
   airDensity: 1.225
   area: 0.009
   mass: 2.1
-  useThrust: 0
+  useThrust: 1
   thrustForce: 700
   ignitionDistance: 10
   burnDistance: 120
