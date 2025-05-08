@@ -6,7 +6,6 @@ namespace BallisticsSimulation.Test {
     {
         [SerializeField] private WeaponController controller;
         public int count = 1000;
-        public float spawnRadius = 1f;
 
 
         void Start()

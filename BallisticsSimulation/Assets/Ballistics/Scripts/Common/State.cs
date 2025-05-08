@@ -1,43 +1,30 @@
 using System;
-using UnityEngine;
+using System.Runtime.CompilerServices;
 
 namespace BallisticsSimulation
 {
     [System.Serializable]
-    public class State
+    public readonly struct State
     {
-        #region Consturctors
-        public State(double x, double y, double z, double vx, double vy, double vz, double t)
-        {
-            _x = x; 
-            _y = y;
-            _z = z;
-            _vx = vx;
-            _vy = vy;
-            _vz = vz;
-            _t = t;
-        }
-        public State(State s)
-        {
-            _x=s._x;
-            _y=s._y;
-            _z=s._z;
-            _vx=s._vx;
-            _vy=s._vy;
-            _vz=s._vz;
-            _t = s._t;
-        }
+        #region Fields
+
+        private readonly double _x, _y, _z;
+        private readonly double _vx, _vy, _vz;
+        private readonly double _t;
+
         #endregion
 
-        #region Fields
-        [SerializeField] private double _x;
-        [SerializeField] private double _y;
-        [SerializeField] private double _z;
+        #region Constructors
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public State(double x, double y, double z, double vx, double vy, double vz, double t)
+        {
+            _x = x; _y = y; _z = z;
+            _vx = vx; _vy = vy; _vz = vz;
+            _t = t;
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public State(State s) : this(s._x, s._y, s._z, s._vx, s._vy, s._vz, s._t) { }
 
-        [SerializeField] private double _vx;
-        [SerializeField] private double _vy;
-        [SerializeField] private double _vz;
-        [SerializeField] private double _t;
         #endregion
 
         #region Properties
@@ -51,38 +38,46 @@ namespace BallisticsSimulation
         #endregion
 
         #region Methods
-        public State Add(State other)
-        {
-            State s = new State(this);
-            s._x += other._x;
-            s._y += other._y;
-            s._z += other._z;
-            s._vx += other._vx;
-            s._vy += other._vy;
-            s._vz += other._vz;
-            s._t += other._t;        
-            return s;
-        }
-
-        public State Dot(double scalar)
-        {
-            State s = new State(this);
-            s._x *= scalar;
-            s._y *= scalar;
-            s._z *= scalar;
-            s._vx *= scalar;
-            s._vy *= scalar;
-            s._vz *= scalar;
-            s._t *= scalar;
-            return s;
-        }
-
-        public State Sub(State o) =>
+        public State Add(in State other) =>
+            new State(
+                _x + other.X,
+                _y + other.Y,
+                _z + other.Z,
+                _vx + other.Vx,
+                _vy + other.Vy,
+                _vz + other.Vz,
+                _t + other.T
+            );
+        public State Dot(in double scalar) =>
+            new State(
+                _x*scalar,
+                _y*scalar,
+                _z*scalar,
+                _vx*scalar,
+                _vy*scalar,
+                _vz*scalar,
+                _t*scalar
+            );
+        public State Sub(in State o) =>
             new State(X - o.X, Y - o.Y, Z - o.Z, Vx - o.Vx, Vy - o.Vy, Vz - o.Vz, 0);
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public double Magnitude() =>
             Math.Sqrt(X * X + Y * Y + Z * Z + Vx * Vx + Vy * Vy + Vz * Vz);
 
+        #endregion
+
+        #region Operators
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static State operator +(in State a, in State b) => new(
+            a._x + b._x, a._y + b._y, a._z + b._z,
+            a._vx + b._vx, a._vy + b._vy, a._vz + b._vz,
+            a._t + b._t);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static State operator *(in State a, double k) => new(
+            a._x * k, a._y * k, a._z * k,
+            a._vx * k, a._vy * k, a._vz * k,
+            a._t * k);
         #endregion
     }
 }

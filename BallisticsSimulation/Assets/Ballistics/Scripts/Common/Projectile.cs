@@ -19,7 +19,7 @@ namespace BallisticsSimulation
 
         private IEnumerator Fly()
         {
-            var path = _solver.Trajectory;
+            var path = _solver.GetTrajectory();
             if (path == null || path.Count < 2) yield break;
 
             float simTime = 0f;

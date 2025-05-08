@@ -12,7 +12,7 @@ namespace BallisticsSimulation
     public class RKF45Integrator : IIntegrator
     {
         public List<State> Calculate(
-            State initState,
+            in State initState,
             double step,          // initial step size
             int maxSteps,
             BallisticsHandler handler,

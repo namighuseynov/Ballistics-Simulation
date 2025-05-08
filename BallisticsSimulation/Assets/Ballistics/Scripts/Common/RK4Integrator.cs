@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace BallisticsSimulation
 {
     public class RK4Integrator : IIntegrator
     {
-        public List<State> Calculate(State initState,
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public List<State> Calculate(in State initState,
             double step,
             int maxSteps,
             BallisticsHandler handler,
@@ -21,14 +23,14 @@ namespace BallisticsSimulation
             while (counter < maxSteps && state.Y >= 0.0)
             {
                 State k1 = handler.Derivatives(state);
-                State k2 = handler.Derivatives(state.Add(k1.Dot(step * 0.5)));
-                State k3 = handler.Derivatives(state.Add(k2.Dot(step * 0.5)));
-                State k4 = handler.Derivatives(state.Add(k3.Dot(step)));
+                State k2 = handler.Derivatives(state + (k1 * (step * 0.5)));
+                State k3 = handler.Derivatives(state + (k2 * (step * 0.5)));
+                State k4 = handler.Derivatives(state + (k3 * (step)));
 
-                State delta = (k1.Add(k2.Dot(2))
-                                 .Add(k3.Dot(2))
-                                 .Add(k4))
-                               .Dot(step / 6.0);
+                State delta = (k1 + (k2 * (2))
+                                 + (k3 * (2))
+                                 + (k4))
+                                * (step / 6.0);
 
                 if (state.Y < 0)
                 {

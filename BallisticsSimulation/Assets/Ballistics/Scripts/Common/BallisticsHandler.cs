@@ -27,10 +27,13 @@ namespace BallisticsSimulation
         public double hMax = 1.0;   // max step
 
         [Header("Trajectory")]
-        private List<State> _trajectory = new();
+        private readonly List<State> _trajectory = new();
         private Vector3 _directionVector = Vector3.zero;
         private Vector3 _straightVector = Vector3.zero;
         private Vector3 _rightVector = Vector3.zero;
+        [SerializeField] private bool _optimizeTrajectoryCalculation = false;
+
+        int _stateHash;
 
         [Header("Wind")]
         [SerializeField] private WindZone _windZone;
@@ -44,11 +47,9 @@ namespace BallisticsSimulation
                 _windZone = FindAnyObjectByType<WindZone>();
             }
             _integrator = Create(_integrationMethod);
-        }
-        private void FixedUpdate()
-        {
-            if (_runtimeCalculate)
-                Recalculate();
+
+            _stateHash = ComputeStateHash();
+            Recalculate();
         }
         #endregion
 
@@ -61,8 +62,6 @@ namespace BallisticsSimulation
         public Vector3 RightVector => _rightVector;
         public Vector3 DirectionVector => _directionVector;
         public Transform Origin => _origin;
-
-        public void Recalculate() => CalculateTrajectory();
         #endregion
 
         #region Helpers
@@ -109,16 +108,79 @@ namespace BallisticsSimulation
                 _ => throw new NotImplementedException()
             };
         }
+
+        int ComputeStateHash()
+        {
+            HashCode hc = new HashCode();
+            hc.Add(_origin.position);
+            hc.Add(_origin.rotation);
+            if (_windZone != null)
+            {
+                hc.Add(_windZone.windMain);
+                hc.Add(_windZone.windTurbulence);
+            }
+
+            hc.Add(_ballisticsProps.startSpeed);
+            hc.Add(_ballisticsProps.dragCoefficent);
+            hc.Add(_ballisticsProps.airDensity);
+            hc.Add(_ballisticsProps.area);
+            hc.Add(_ballisticsProps.mass);
+            hc.Add(_ballisticsProps.useGravity);
+            hc.Add(_ballisticsProps.useDrag);
+            hc.Add(_ballisticsProps.useWind);
+            hc.Add(_ballisticsProps.useThrust);
+            hc.Add(_ballisticsProps.thrustForce);
+            hc.Add(_ballisticsProps.ignitionDistance);
+            hc.Add(_ballisticsProps.burnDistance);
+
+            return hc.ToHashCode();
+        }
         #endregion
 
         #region Properties
         public AxisDirection Direction => _ballisticsProps.axisDirection;
+        public WindZone WindZone => _windZone;
+        public BallisticsProperties Props => _ballisticsProps;
         #endregion
 
         #region Core math
-        private void CalculateTrajectory()
+        private void RecordLog()
         {
+            List<string> logData = new List<string>();
+            logData.Add("x,y,vx,vy,t");
+
+            for (int i = 0; i < _trajectory.Count; i++)
+            {
+                var currentCorner = _trajectory[i];
+                string line = string.Format("{0:F3},{1:F3},{2:F3},{3:F3},{4:F3}",
+                    currentCorner.X,
+                    currentCorner.Y,
+                    currentCorner.Vx,
+                    currentCorner.Vy,
+                    currentCorner.T
+                    );
+                logData.Add(line);
+            }
+            if (logData.Count > 0)
+            {
+                string fileName = string.Empty;
+                if (_integrationMethod == IntegrationMethod.Euler) fileName = "sim_Euler.csv";
+                else if (_integrationMethod == IntegrationMethod.RK4) fileName = "sim_RK4.csv";
+                else if (_integrationMethod == IntegrationMethod.RKF45) fileName = "sim_RKF45.csv";
+
+                string filePath = Path.Combine(Application.dataPath, fileName);
+                File.WriteAllLines(filePath, logData.ToArray());
+                Debug.Log("CSV file was created at: " + filePath);
+            }
+
+            
+        }
+
+        private void Recalculate()
+        {
+            _trajectory.Clear();
             double angleRad = GetAngle();
+
             State state = new State(
                 0, _origin.position.y, 0,
                 _ballisticsProps.startSpeed * Math.Cos(angleRad),
@@ -127,45 +189,42 @@ namespace BallisticsSimulation
             );
 
             _integrator = Create(_integrationMethod);
-            _trajectory = _integrator.Calculate(
-                state,
+            _trajectory.AddRange(_integrator.Calculate(state,
                 stepSize,
                 maxSteps,
                 this,
                 eps,
                 hMin,
                 hMax
-            );
+                ));
 
-            if (_enableLog && !_runtimeCalculate)
+            if (_enableLog)
             {
-                List<string> logData = new List<string>();
-                logData.Add("x,y,vx,vy,t");
+                RecordLog();
+            }
+            Debug.Log("Recalculated");
+        }
 
-                for (int i = 0; i < _trajectory.Count; i++)
-                {
-                    var currentCorner = _trajectory[i];
-                    string line = string.Format("{0:F3},{1:F3},{2:F3},{3:F3},{4:F3}",
-                        currentCorner.X,
-                        currentCorner.Y,
-                        currentCorner.Vx,
-                        currentCorner.Vy,
-                        currentCorner.T
-                        );
-                    logData.Add( line );
-                }
-                if (logData.Count > 0)
-                {
-                    string fileName = string.Empty;
-                    if (_integrationMethod == IntegrationMethod.Euler) fileName = "sim_Euler.csv";
-                    else if (_integrationMethod == IntegrationMethod.RK4) fileName = "sim_RK4.csv";
-                    else if (_integrationMethod == IntegrationMethod.RKF45) fileName = "sim_RKF45.csv";
+        private void FixedUpdate()
+        {
+            if (_runtimeCalculate)
+            {
+                GetTrajectory();
+            }
+        }
 
-                    string filePath = Path.Combine(Application.dataPath, fileName);
-                    File.WriteAllLines(filePath, logData.ToArray());
-                    Debug.Log("CSV file was created at: " + filePath);
+        public IReadOnlyList<State> GetTrajectory()
+        {
+            if (_optimizeTrajectoryCalculation)
+            {
+                int h = ComputeStateHash();
+                if (h != _stateHash)
+                {
+                    _stateHash = h;
+                    Recalculate();
                 }
             }
+            return _trajectory;
         }
 
         public State Derivatives(State s)

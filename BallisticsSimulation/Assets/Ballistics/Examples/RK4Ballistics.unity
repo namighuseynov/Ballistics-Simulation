@@ -138,13 +138,14 @@ MonoBehaviour:
   _ballisticsProps: {fileID: 11400000, guid: 74e354b7eb58b5f4caf559f6e604d2bc, type: 2}
   _origin: {fileID: 73006161365433991}
   _integrationMethod: 0
-  _runtimeCalculate: 0
+  _runtimeCalculate: 1
   stepSize: 0.01
   maxSteps: 1000
   _enableLog: 0
   eps: 0.01
   hMin: 0.0001
   hMax: 0.001
+  _optimizeTrajectoryCalculation: 1
   _windZone: {fileID: 280099813}
 --- !u!182 &280099813 stripped
 WindZone:
@@ -390,6 +391,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TrajectoryRenderer
       objectReference: {fileID: 0}
+    - target: {fileID: 2509908746730117263, guid: 5a50f1470e94584459ce95f4d4d7bdd6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a50f1470e94584459ce95f4d4d7bdd6, type: 3}
 --- !u!1001 &3924237418377565084
@@ -603,5 +608,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 8811743185714224311}
-  count: 10000
-  spawnRadius: 5
+  count: 700

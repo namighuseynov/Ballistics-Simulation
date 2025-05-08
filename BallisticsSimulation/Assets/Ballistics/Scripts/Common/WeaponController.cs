@@ -30,7 +30,7 @@ namespace BallisticsSimulation
         {
             if (_handler != null)
             {
-                _handler.Recalculate();
+                _handler.GetTrajectory();
 
                 var projectileGO = Instantiate(_projectilePrefab);
                 projectileGO.transform.position = transform.position;

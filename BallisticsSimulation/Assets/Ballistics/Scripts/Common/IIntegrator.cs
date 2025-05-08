@@ -5,7 +5,7 @@ namespace BallisticsSimulation
     public interface IIntegrator
     {
         public List<State> Calculate(
-            State initState, 
+            in State initState, 
             double step, 
             int maxSteps, 
             BallisticsHandler handler,
