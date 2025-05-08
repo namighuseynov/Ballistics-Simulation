@@ -1,25 +1,20 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace BallisticsSimulation.Common
+namespace BallisticsSimulation
 {
     public class Projectile : MonoBehaviour
     {
         private BallisticsHandler _solver;
         private Transform _origin;
         [SerializeField] private GameObject _explosionEffect;
-        private Vector3 _startPosition = Vector3.zero;
-        [SerializeField] private float _lifeTime = 15;
 
-        public void Init(BallisticsHandler solver, Transform shotOrigin)
+        public void Init(BallisticsHandler solver, Transform shotOrigin, float lifeTime)
         {
             _solver = solver;
             _origin = shotOrigin;
             StartCoroutine(Fly());
-            _startPosition = _origin.position;
-            _startPosition.y = 0;
-            Destroy(gameObject, _lifeTime);
+            Destroy(gameObject, lifeTime);
         }
 
         private IEnumerator Fly()
@@ -27,7 +22,7 @@ namespace BallisticsSimulation.Common
             var path = _solver.Trajectory;
             if (path == null || path.Count < 2) yield break;
 
-            float simTime = 0f;     
+            float simTime = 0f;
             int seg = 0;
 
             Vector3 straight = _solver.StraightVector;

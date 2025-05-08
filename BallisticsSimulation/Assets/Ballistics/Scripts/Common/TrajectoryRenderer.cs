@@ -9,6 +9,7 @@ namespace BallisticsSimulation
         #region Fields
         [SerializeField] private BallisticsHandler _handler;
         [SerializeField] private bool _drawBaseVectors = true;
+        [SerializeField] private bool _showDistance = false;
         
         private LineRenderer _lineRenderer;
         private List<Vector3> _corners = new List<Vector3>();
@@ -56,7 +57,7 @@ namespace BallisticsSimulation
                 _lineRenderer.positionCount = _corners.Count;
                 _lineRenderer.SetPositions(_corners.ToArray());
 
-                if (_corners.Count > 0) Debug.Log(corners[corners.Count - 1].X);
+                if (_showDistance) if (_corners.Count > 0) Debug.Log(corners[corners.Count - 1].X);
             }
             else
             {

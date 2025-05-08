@@ -21,7 +21,7 @@ MonoBehaviour:
   airDensity: 1.225
   area: 0.009
   mass: 2.1
-  useThrust: 1
+  useThrust: 0
   thrustForce: 700
   ignitionDistance: 10
   burnDistance: 120

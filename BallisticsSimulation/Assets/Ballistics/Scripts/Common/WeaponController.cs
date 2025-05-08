@@ -1,16 +1,17 @@
 using UnityEngine;
 
-namespace BallisticsSimulation.RK4
+namespace BallisticsSimulation
 {
     public class WeaponController : MonoBehaviour
     {
         #region Fields
         [SerializeField] private BallisticsHandler _handler;
-        [SerializeField] private GameObject _rkProjectilePrefab;
+        [SerializeField] private GameObject _projectilePrefab;
         [SerializeField] private Transform _shotOrigin;
+        [SerializeField] private float _projectileLifeTime = 10;
         #endregion
 
-        #region Unity loop
+        #region Unity loop
         private void Awake()
         {
             if (_handler == null)
@@ -24,19 +25,19 @@ namespace BallisticsSimulation.RK4
         }
         #endregion
 
-        #region Shooting
-        private void Shot()
+        #region Shoot
+        public void Shot()
         {
             if (_handler != null)
             {
                 _handler.Recalculate();
 
-                var projectileGO = Instantiate(_rkProjectilePrefab);
+                var projectileGO = Instantiate(_projectilePrefab);
                 projectileGO.transform.position = transform.position;
                 projectileGO.transform.rotation = transform.rotation;
 
-                if (projectileGO.TryGetComponent(out Common.Projectile proj))
-                    proj.Init(_handler, _shotOrigin);
+                if (projectileGO.TryGetComponent(out Projectile proj))
+                    proj.Init(_handler, _shotOrigin, _projectileLifeTime);
             }
         }
         #endregion
