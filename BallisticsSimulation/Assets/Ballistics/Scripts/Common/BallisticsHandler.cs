@@ -209,7 +209,7 @@ namespace BallisticsSimulation
         {
             if (_runtimeCalculate)
             {
-                GetTrajectory();
+                Recalculate();
             }
         }
 
