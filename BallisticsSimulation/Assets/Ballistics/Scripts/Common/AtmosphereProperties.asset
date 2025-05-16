@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0bbad8e565ddf34b9aac013fc6ca4a3, type: 3}
-  m_Name: AtmosphereProperties 1
+  m_Script: {fileID: 11500000, guid: 7f497391c941b1a4d9488e5ac03f3679, type: 3}
+  m_Name: AtmosphereProperties
   m_EditorClassIdentifier: 
   Temperature: 288.15
   Pressure: 101325

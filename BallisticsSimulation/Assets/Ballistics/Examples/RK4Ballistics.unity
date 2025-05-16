@@ -136,6 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ballisticsProps: {fileID: 11400000, guid: 74e354b7eb58b5f4caf559f6e604d2bc, type: 2}
+  _atmosphereProps: {fileID: 11400000, guid: b801f5238f658eb4a94eeaac6b41f66e, type: 2}
   _origin: {fileID: 73006161365433991}
   _integrationMethod: 0
   _runtimeCalculate: 1
@@ -393,7 +394,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2509908746730117263, guid: 5a50f1470e94584459ce95f4d4d7bdd6, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a50f1470e94584459ce95f4d4d7bdd6, type: 3}
@@ -602,7 +603,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8811743185714224310}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d37c0693c628684e9876a4cf2829820, type: 3}
   m_Name: 

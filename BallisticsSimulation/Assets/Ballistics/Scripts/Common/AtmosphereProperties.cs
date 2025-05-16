@@ -21,6 +21,9 @@ namespace BallisticsSimulation
         /// Normal Density
         /// </summary>
         public float Density = 1.225f;
+        public float L = 0.0065f;
+        public float g0 = 9.80665f;
+        public float R = 287.05f;
         #endregion Fields
     }
 }

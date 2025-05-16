@@ -10,6 +10,7 @@ namespace BallisticsSimulation
         #region Fields
         [Header("Ballistics")]
         [SerializeField] private BallisticsProperties _ballisticsProps;
+        [SerializeField] private AtmosphereProperties _atmosphereProps;
         [SerializeField] private Transform _origin;
 
         [Header("Integrator")]
@@ -238,7 +239,8 @@ namespace BallisticsSimulation
             Vector3 vRel = vWorld - (_ballisticsProps.useWind ? GetWind() : Vector3.zero);
 
             double vMag = vRel.magnitude;
-            double dragFactor = _ballisticsProps.airDensity
+            float density = Density((float)s.Y);
+            double dragFactor = density
                               * _ballisticsProps.dragCoefficent
                               * _ballisticsProps.area * 0.5;
 
@@ -264,6 +266,19 @@ namespace BallisticsSimulation
 
             return new State(s.Vx, s.Vy, s.Vz, ax, ay, az, 1.0);
         }
+
+        public float Density(float altitude)
+        {
+            float exponent = _atmosphereProps.g0 / (_atmosphereProps.L * _atmosphereProps.R);
+            float baseValue = 1.0f - (_atmosphereProps.L * altitude) / _atmosphereProps.Temperature;
+
+            if (baseValue <= 0)
+                return 0f;
+
+            return _atmosphereProps.Density * Mathf.Pow(baseValue, exponent);
+        }
+
+
         #endregion
     }
 }
