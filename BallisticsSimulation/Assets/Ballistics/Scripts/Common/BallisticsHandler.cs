@@ -56,9 +56,7 @@ namespace BallisticsSimulation
 
         #region Public API
         public IReadOnlyList<State> Trajectory => _trajectory;
-
         public double StepSize => stepSize;
-
         public Vector3 StraightVector => _straightVector;
         public Vector3 RightVector => _rightVector;
         public Vector3 DirectionVector => _directionVector;
@@ -267,7 +265,7 @@ namespace BallisticsSimulation
             return new State(s.Vx, s.Vy, s.Vz, ax, ay, az, 1.0);
         }
 
-        public float Density(float altitude)
+        private float Density(float altitude)
         {
             float exponent = _atmosphereProps.g0 / (_atmosphereProps.L * _atmosphereProps.R);
             float baseValue = 1.0f - (_atmosphereProps.L * altitude) / _atmosphereProps.Temperature;
