@@ -139,7 +139,7 @@ MonoBehaviour:
   _atmosphereProps: {fileID: 11400000, guid: b801f5238f658eb4a94eeaac6b41f66e, type: 2}
   _origin: {fileID: 73006161365433991}
   _integrationMethod: 0
-  _runtimeCalculate: 1
+  _runtimeCalculate: 0
   stepSize: 0.01
   maxSteps: 1000
   _enableLog: 0
@@ -148,6 +148,14 @@ MonoBehaviour:
   hMax: 0.001
   _optimizeTrajectoryCalculation: 1
   _windZone: {fileID: 280099813}
+  windAloft: 15
+  windScaleHeight: 900
+  gustSigma: 1
+  gustFreq: 0.5
+  gustSeed: 12345
+  U0_500: 2
+  U500_2000: 8
+  U2000p: 15
 --- !u!182 &280099813 stripped
 WindZone:
   m_CorrespondingSourceObject: {fileID: 3924237418097617017, guid: edf90981305f3fe408f8a2656c0b34a1, type: 3}

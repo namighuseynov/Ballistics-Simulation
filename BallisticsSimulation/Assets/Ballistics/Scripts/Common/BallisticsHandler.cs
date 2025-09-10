@@ -36,11 +36,22 @@ namespace BallisticsSimulation
 
         int _stateHash;
 
+        [Header("Gravity")]
+        const float EarthRadius = 6371000f; // m
+
         [Header("Wind")]
         [SerializeField] private WindZone _windZone;
+        [SerializeField] private float gustSigma = 1f;  
+        [SerializeField] private float gustFreq = 0.5f; 
+        [SerializeField] private int gustSeed = 12345;
+        [SerializeField] private float U0_500 = 2f;
+        [SerializeField] private float U500_2000 = 8f;
+        [SerializeField] private float U2000p = 15f;
+
+
         #endregion
 
-        #region Unity loop
+        #region Unity 
         private void Start()
         {
             if (_windZone == null)
@@ -74,7 +85,7 @@ namespace BallisticsSimulation
             };
 
             _straightVector = new Vector3(_directionVector.x, 0, _directionVector.z).normalized;
-            _rightVector = -Vector3.Cross(_straightVector, _directionVector);
+            _rightVector = -Vector3.Cross(_straightVector, _directionVector).normalized;
 
             int sign = MathF.Sign(_directionVector.y);
 
@@ -82,19 +93,35 @@ namespace BallisticsSimulation
             return angle * Mathf.Deg2Rad * sign;
         }
 
-        private Vector3 GetWind()
+        static float SmoothStep(float a, float b, float x)
         {
-            Vector3 main = _windZone.transform.forward;
+            float t = Mathf.Clamp01((x - a) / (b - a));
+            return t * t * (3f - 2f * t); 
+        }
+        private float LayeredMean(float h)
+        {
+            float U0 = (_windZone ? _windZone.windMain : U0_500);
+            float u12 = Mathf.Lerp(U0, U500_2000, SmoothStep(0f, 500f, h));
+            float u23 = Mathf.Lerp(U500_2000, U2000p, SmoothStep(500f, 2000f, h));
+            return (h <= 2000f) ? u12 : u23;
+        }
 
-            Vector3 turbDir = Quaternion.AngleAxis(
-                                  UnityEngine.Random.Range(0f, 360f),
-                                  Vector3.up) * main;
+        private float GustValue(double t)
+        {
+            float u = (float)(gustFreq * t);
 
-            float windSpeed = _windZone.windMain;
-            float turbulenceAbs = _windZone.windTurbulence
-                                * UnityEngine.Random.Range(-1f, 1f);
+            return gustSigma * (2f * Mathf.PerlinNoise(gustSeed, u) - 1f);
+        }
 
-            return main * windSpeed + turbDir * turbulenceAbs;
+        private Vector3 GetWind(State s)
+        {
+            Vector3 dir = (_windZone != null ? _windZone.transform.forward : Vector3.right).normalized;
+
+            float h = Mathf.Max(0f, (float)s.Y);
+            float Umean = LayeredMean(h);
+            float Ugust = GustValue(s.T);
+
+            return dir * Mathf.Max(0f, Umean + Ugust);
         }
 
         private static IIntegrator Create(IntegrationMethod method)
@@ -113,12 +140,26 @@ namespace BallisticsSimulation
             HashCode hc = new HashCode();
             hc.Add(_origin.position);
             hc.Add(_origin.rotation);
+
             if (_windZone != null)
             {
                 hc.Add(_windZone.windMain);
                 hc.Add(_windZone.windTurbulence);
+                hc.Add(_windZone.transform.forward);
             }
 
+            // Wind
+            hc.Add(gustSigma);
+            hc.Add(gustFreq);
+            hc.Add(gustSeed);
+
+            // Atmosphere
+            hc.Add(_atmosphereProps.Temperature);
+            hc.Add(_atmosphereProps.L);
+            hc.Add(_atmosphereProps.R);
+            hc.Add(_atmosphereProps.g0);
+
+            // Ballistics
             hc.Add(_ballisticsProps.startSpeed);
             hc.Add(_ballisticsProps.dragCoefficent);
             hc.Add(_ballisticsProps.airDensity);
@@ -129,8 +170,18 @@ namespace BallisticsSimulation
             hc.Add(_ballisticsProps.useWind);
             hc.Add(_ballisticsProps.useThrust);
             hc.Add(_ballisticsProps.thrustForce);
-            hc.Add(_ballisticsProps.ignitionDistance);
-            hc.Add(_ballisticsProps.burnDistance);
+            hc.Add(_ballisticsProps.IgnitionTime);
+            hc.Add(_ballisticsProps.BurnTime);
+            hc.Add(stepSize);
+            hc.Add(_integrationMethod);
+
+            // Others
+            hc.Add(eps);
+            hc.Add(hMin);
+            hc.Add(hMax);
+            hc.Add(U0_500);
+            hc.Add(U500_2000);
+            hc.Add(U2000p);
 
             return hc.ToHashCode();
         }
@@ -174,7 +225,6 @@ namespace BallisticsSimulation
 
             
         }
-
         private void Recalculate()
         {
             _trajectory.Clear();
@@ -203,7 +253,6 @@ namespace BallisticsSimulation
             }
             Debug.Log("Recalculated");
         }
-
         private void FixedUpdate()
         {
             if (_runtimeCalculate)
@@ -211,7 +260,6 @@ namespace BallisticsSimulation
                 Recalculate();
             }
         }
-
         public IReadOnlyList<State> GetTrajectory()
         {
             if (_optimizeTrajectoryCalculation)
@@ -225,7 +273,6 @@ namespace BallisticsSimulation
             }
             return _trajectory;
         }
-
         public State Derivatives(State s)
         {
             if (_ballisticsProps.mass == 0) _ballisticsProps.mass = 0.001;
@@ -234,7 +281,7 @@ namespace BallisticsSimulation
                            + Vector3.up * (float)s.Vy
                            + _rightVector * (float)s.Vz;
 
-            Vector3 vRel = vWorld - (_ballisticsProps.useWind ? GetWind() : Vector3.zero);
+            Vector3 vRel = vWorld - (_ballisticsProps.useWind ? GetWind(s) : Vector3.zero);
 
             double vMag = vRel.magnitude;
             float density = Density((float)s.Y);
@@ -246,12 +293,12 @@ namespace BallisticsSimulation
                             ? -(float)(dragFactor / _ballisticsProps.mass) * (float)vMag * vRel
                             : Vector3.zero;
 
-            Vector3 gravity = _ballisticsProps.useGravity ? new Vector3(0, -9.8066f, 0) : Vector3.zero;
+            Vector3 gravity = _ballisticsProps.useGravity ? Gravity((float)s.Y) : Vector3.zero;
             Vector3 accWorld = gravity + dragAcc;
 
             if (_ballisticsProps.useThrust &&
-    s.X > _ballisticsProps.ignitionDistance &&
-    s.X < _ballisticsProps.ignitionDistance + _ballisticsProps.burnDistance)
+    s.T > _ballisticsProps.IgnitionTime &&
+    s.T < _ballisticsProps.IgnitionTime + _ballisticsProps.BurnTime)
             {
                 Vector3 dir = vWorld.sqrMagnitude > 1e-6f ? vWorld.normalized : _straightVector;
                 Vector3 thrustAcc = (float)(_ballisticsProps.thrustForce / _ballisticsProps.mass) * dir;
@@ -264,19 +311,19 @@ namespace BallisticsSimulation
 
             return new State(s.Vx, s.Vy, s.Vz, ax, ay, az, 1.0);
         }
-
+        private Vector3 Gravity(float h)
+        {
+            float g = _atmosphereProps.g0 * Mathf.Pow(EarthRadius / (EarthRadius + Mathf.Max(0f, h)), 2f);
+            return new Vector3(0f, -g, 0f);
+        }
         private float Density(float altitude)
         {
-            float exponent = _atmosphereProps.g0 / (_atmosphereProps.L * _atmosphereProps.R);
-            float baseValue = 1.0f - (_atmosphereProps.L * altitude) / _atmosphereProps.Temperature;
+            float b = 1.0f - (_atmosphereProps.L * altitude) / _atmosphereProps.Temperature; 
+            if (b <= 0f) return 0f;
 
-            if (baseValue <= 0)
-                return 0f;
-
-            return _atmosphereProps.Density * Mathf.Pow(baseValue, exponent);
+            float expo = _atmosphereProps.g0 / (_atmosphereProps.L * _atmosphereProps.R) - 1f;
+            return _atmosphereProps.Density * Mathf.Pow(b, expo);
         }
-
-
         #endregion
     }
 }

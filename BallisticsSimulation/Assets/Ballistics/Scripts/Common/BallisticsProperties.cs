@@ -20,8 +20,8 @@ namespace BallisticsSimulation
         [Header("Rocket motor")]
         public bool useThrust =                 false;
         public double thrustForce =             700;
-        public double ignitionDistance =        10;
-        public double burnDistance =            120;
+        public double IgnitionTime =            15;
+        public double BurnTime =                120;
 
     }
 }
