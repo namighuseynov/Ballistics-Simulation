@@ -148,8 +148,6 @@ MonoBehaviour:
   hMax: 0.001
   _optimizeTrajectoryCalculation: 1
   _windZone: {fileID: 280099813}
-  windAloft: 15
-  windScaleHeight: 900
   gustSigma: 1
   gustFreq: 0.5
   gustSeed: 12345
@@ -600,10 +598,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91d6be11b166ef14a9497f1f44921009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _handler: {fileID: 64376355}
-  _projectilePrefab: {fileID: 4766259203224675503, guid: d599b88912b60b1408f5f48824fc543a, type: 3}
-  _shotOrigin: {fileID: 73006161365433991}
-  _projectileLifeTime: 30
+  handler: {fileID: 64376355}
+  projectilePrefab: {fileID: 4766259203224675503, guid: d599b88912b60b1408f5f48824fc543a, type: 3}
+  shotOrigin: {fileID: 73006161365433991}
+  projectileLifeTime: 10
 --- !u!114 &8811743185714224312
 MonoBehaviour:
   m_ObjectHideFlags: 0

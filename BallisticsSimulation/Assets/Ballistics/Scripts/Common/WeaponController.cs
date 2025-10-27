@@ -5,17 +5,17 @@ namespace BallisticsSimulation
     public class WeaponController : MonoBehaviour
     {
         #region Fields
-        [SerializeField] private BallisticsHandler _handler;
-        [SerializeField] private GameObject _projectilePrefab;
-        [SerializeField] private Transform _shotOrigin;
-        [SerializeField] private float _projectileLifeTime = 10;
+        public BallisticsHandler handler;
+        public GameObject projectilePrefab;
+        public Transform shotOrigin;
+        public float projectileLifeTime = 10;
         #endregion
 
         #region Unity loop
         private void Awake()
         {
-            if (_handler == null)
-                _handler = FindAnyObjectByType<BallisticsHandler>();
+            if (handler == null)
+                handler = FindAnyObjectByType<BallisticsHandler>();
         }
 
         private void Update()
@@ -28,16 +28,16 @@ namespace BallisticsSimulation
         #region Shoot
         public void Shot()
         {
-            if (_handler != null)
+            if (handler != null)
             {
-                _handler.GetTrajectory();
+                handler.GetTrajectory();
 
-                var projectileGO = Instantiate(_projectilePrefab);
+                var projectileGO = Instantiate(projectilePrefab);
                 projectileGO.transform.position = transform.position;
                 projectileGO.transform.rotation = transform.rotation;
 
                 if (projectileGO.TryGetComponent(out Projectile proj))
-                    proj.Init(_handler, _shotOrigin, _projectileLifeTime);
+                    proj.Init(handler, shotOrigin, projectileLifeTime);
             }
         }
         #endregion
