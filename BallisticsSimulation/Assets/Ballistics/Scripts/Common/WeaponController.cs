@@ -26,7 +26,7 @@ namespace BallisticsSimulation
         #endregion
 
         #region Shoot
-        public void Shot()
+        public virtual void Shot()
         {
             if (handler != null)
             {
