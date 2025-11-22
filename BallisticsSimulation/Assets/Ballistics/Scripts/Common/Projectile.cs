@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BallisticsSimulation
@@ -19,7 +20,7 @@ namespace BallisticsSimulation
 
         private IEnumerator Fly()
         {
-            var path = _solver.GetTrajectory();
+            var path = new List<State>(_solver.GetTrajectory());
             if (path == null || path.Count < 2) yield break;
 
             float simTime = 0f;
