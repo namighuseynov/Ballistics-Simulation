@@ -139,14 +139,14 @@ MonoBehaviour:
   _atmosphereProps: {fileID: 11400000, guid: b801f5238f658eb4a94eeaac6b41f66e, type: 2}
   _origin: {fileID: 73006161365433991}
   _integrationMethod: 0
-  _runtimeCalculate: 0
+  _runtimeCalculate: 1
   stepSize: 0.01
   maxSteps: 1000
   _enableLog: 0
   eps: 0.01
   hMin: 0.0001
   hMax: 0.001
-  _optimizeTrajectoryCalculation: 1
+  _optimizeTrajectoryCalculation: 0
   _windZone: {fileID: 280099813}
   gustSigma: 1
   gustFreq: 0.5

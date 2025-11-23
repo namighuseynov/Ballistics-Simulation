@@ -125,6 +125,8 @@ GameObject:
   - component: {fileID: 7760682304216397945}
   - component: {fileID: 6987523785658868418}
   - component: {fileID: 1923373908735258710}
+  - component: {fileID: 635174986752141411}
+  - component: {fileID: 6631773522925109887}
   m_Layer: 0
   m_Name: RPG 7V2
   m_TagString: Untagged
@@ -161,9 +163,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91d6be11b166ef14a9497f1f44921009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _handler: {fileID: 0}
-  _rkProjectilePrefab: {fileID: 4766259203224675503, guid: d599b88912b60b1408f5f48824fc543a, type: 3}
-  _shotOrigin: {fileID: 1995777253960892658}
+  handler: {fileID: 1923373908735258710}
+  projectilePrefab: {fileID: 4766259203224675503, guid: d599b88912b60b1408f5f48824fc543a, type: 3}
+  shotOrigin: {fileID: 1995777253960892658}
+  projectileLifeTime: 15
 --- !u!114 &1923373908735258710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,12 +180,136 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ballisticsProps: {fileID: 11400000, guid: 74e354b7eb58b5f4caf559f6e604d2bc, type: 2}
+  _atmosphereProps: {fileID: 11400000, guid: b801f5238f658eb4a94eeaac6b41f66e, type: 2}
   _origin: {fileID: 1995777253960892658}
   _integrationMethod: 0
   _runtimeCalculate: 1
   stepSize: 0.10000000149011612
   maxSteps: 10000
+  _enableLog: 0
   eps: 0.0001
   hMin: 0.0001
   hMax: 0.1
+  _optimizeTrajectoryCalculation: 0
   _windZone: {fileID: 0}
+  gustSigma: 1
+  gustFreq: 0.5
+  gustSeed: 12345
+  U0_500: 2
+  U500_2000: 8
+  U2000p: 15
+--- !u!120 &635174986752141411
+LineRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6987523785658868419}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: -6629797300637803691, guid: 7eb2e8f1b498de443af40ace8d0e9bad, type: 3}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1}
+  m_Parameters:
+    serializedVersion: 3
+    widthMultiplier: 1
+    widthCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.0900898
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    colorGradient:
+      serializedVersion: 2
+      key0: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    numCornerVertices: 0
+    numCapVertices: 0
+    alignment: 0
+    textureMode: 0
+    shadowBias: 0.5
+    generateLightingData: 0
+  m_UseWorldSpace: 1
+  m_Loop: 0
+--- !u!114 &6631773522925109887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6987523785658868419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d8a051fbd84e0942ba4f4429bcacc3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _handler: {fileID: 1923373908735258710}
+  _drawBaseVectors: 0
+  _showDistance: 0
+  _gunOrigin: {fileID: 1995777253960892658}

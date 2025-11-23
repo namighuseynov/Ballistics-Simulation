@@ -7,13 +7,25 @@ namespace BallisticsSimulation
     public class Projectile : MonoBehaviour
     {
         private BallisticsHandler _solver;
-        private Transform _origin;
+        private Vector3 _originPos;
+        private Vector3 _straight;
+        private Vector3 _right;
+        private List<State> _path;
         [SerializeField] private GameObject _explosionEffect;
 
-        public void Init(BallisticsHandler solver, Transform shotOrigin, float lifeTime)
+        public void Init(BallisticsHandler solver, float lifeTime)
         {
             _solver = solver;
-            _origin = shotOrigin;
+            _straight = _solver.StraightVector;
+            _right = _solver.RightVector;
+            _originPos = new Vector3(
+                solver.Origin.position.x,
+                solver.Origin.position.y,
+                solver.Origin.position.z
+                );
+
+            _path = new List<State>(_solver.GetTrajectory());
+
             StartCoroutine(Fly());
             Destroy(gameObject, lifeTime);
         }
@@ -25,9 +37,6 @@ namespace BallisticsSimulation
 
             float simTime = 0f;
             int seg = 0;
-
-            Vector3 straight = _solver.StraightVector;
-            Vector3 right = _solver.RightVector;
 
             while (seg < path.Count - 1)
             {
@@ -54,10 +63,10 @@ namespace BallisticsSimulation
             }
 
             Vector3 LocalToWorld(State s) =>
-                (new Vector3(_origin.position.x, 0, _origin.position.z)) +
-                straight * (float)s.X
+                (new Vector3(_originPos.x, 0, _originPos.z)) +
+                _straight * (float)s.X
               + Vector3.up * (float)s.Y
-              + right * (float)s.Z;
+              + _right * (float)s.Z;
         }
 
         private void OnTriggerEnter(Collider other)

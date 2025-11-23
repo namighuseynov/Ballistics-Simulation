@@ -37,7 +37,7 @@ namespace BallisticsSimulation
                 projectileGO.transform.rotation = transform.rotation;
 
                 if (projectileGO.TryGetComponent(out Projectile proj))
-                    proj.Init(handler, shotOrigin, projectileLifeTime);
+                    proj.Init(handler, projectileLifeTime);
             }
         }
         #endregion
