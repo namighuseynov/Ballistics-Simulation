@@ -24,5 +24,30 @@ The "Unity Ballistics Simulation" repository contains a project developed in the
 5. Run simulations and analyze the results.
 6. Edit and enhance the project to suit your needs and research.
 
-## License
-This project is licensed under the [Apache License 2.0](LICENSE), which allows you to use, modify, and distribute the code under the terms and conditions specified in the Apache License 2.0.
+## 🔒 License & Usage Restrictions
+
+This project is **public**, but **non-commercial**.
+
+You are allowed to:
+- view and study the source code  
+- use it for research or educational purposes  
+- reference it with attribution  
+
+You are NOT allowed to:
+- use the project commercially  
+- integrate it into any product, game, training simulator, or software  
+- redistribute or republish it  
+- modify and distribute modified versions  
+- use it for paid services  
+- use it for machine learning datasets  
+
+
+For commercial licensing, contact:  
+**namiq.guseinof@gmail.com**
+
+## 📄 Legal Notice
+
+This project includes a NOTICE file containing important legal and copyright
+information. The NOTICE file must be preserved in all allowed copies of this
+project.  
+See: **NOTICE**
