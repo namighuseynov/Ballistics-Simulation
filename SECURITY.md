@@ -12,7 +12,7 @@ If you discover a security issue, vulnerability, or misuse of the repository,
 please do not open a public issue.  
 Instead, report it privately to:
 
-**dr.namighuseynov@gmail.com**
+**namiq.guseinof@gmail.com**
 
 Please include:
 
