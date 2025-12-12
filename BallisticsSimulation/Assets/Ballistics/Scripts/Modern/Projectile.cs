@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace BallisticsSimulation
         private Vector3 _right;
         private List<State> _path;
         [SerializeField] private GameObject _explosionEffect;
+        public event EventHandler<ProjectileHitEventArgs> OnHit;
 
         public void Init(BallisticsHandler solver, float lifeTime)
         {
@@ -71,13 +73,24 @@ namespace BallisticsSimulation
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.tag == "Floor")
+            Vector3 hitPoint = transform.position;
+            Vector3 normal = Vector3.up;
+
+            if (other != null)
             {
-                GameObject explosion = Instantiate(_explosionEffect);
+                hitPoint = other.ClosestPoint(transform.position);
+                normal = (transform.position - hitPoint).sqrMagnitude > 0f
+                    ? (transform.position - hitPoint).normalized
+                    : Vector3.up;
+            }
+
+            OnHit?.Invoke(this, new ProjectileHitEventArgs(other?.gameObject, other, hitPoint, normal, transform.position));
+
+            if (other.CompareTag("Floor"))
+            {
+                var explosion = Instantiate(_explosionEffect);
                 explosion.transform.position = transform.position;
 
-                Vector3 finishPosition = transform.position;
-                finishPosition.y = 0;
                 Destroy(gameObject);
             }
         }
