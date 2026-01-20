@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Floor
   - Weapon
+  - Grenade
   layers:
   - Default
   - TransparentFX

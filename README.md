@@ -1,7 +1,7 @@
-# Unity Ballistics Simulation
+# Ballistics Simulation
 
 ## Project Description
-The "Unity Ballistics Simulation" repository contains a project developed in the Unity platform, designed for creating and visualizing a ballistic system, as well as exploring the behavior of different projectiles within a virtual environment. This project provides tools and resources for modeling and simulating the motion of projectiles under different conditions and with various parameters.
+The "Ballistics Simulation" repository contains a project developed in the Unity platform, designed for creating and visualizing a ballistic system, as well as exploring the behavior of different projectiles within a virtual environment. This project provides tools and resources for modeling and simulating the motion of projectiles under different conditions and with various parameters.
 
 ## Key Features
 - **Realistic Ballistics:** Develop and fine-tune a physics system that enables projectiles to behave similarly to real-world conditions. Study the effects of wind, gravity, aerodynamics, and other factors on the trajectory of flight.
