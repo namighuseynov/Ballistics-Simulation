@@ -9,72 +9,60 @@ namespace BallisticsSimulation
         #region Fields
         [SerializeField] private BallisticsHandler _handler;
         [SerializeField] private bool _drawBaseVectors = true;
-        [SerializeField] private bool _showDistance = false;
         
         private LineRenderer _lineRenderer;
-        private List<Vector3> _corners = new List<Vector3>();
-        [SerializeField] private Transform _gunOrigin;
+        private Vector3[] _positions = new Vector3[0];
 
         #endregion
 
         #region Methods
-        private void Start()
+        private void Awake()
         {
-            _handler = GetComponent<BallisticsHandler>();
             _lineRenderer = GetComponent<LineRenderer>();
-            if (_handler == null)
-            {
-                _handler = FindAnyObjectByType<BallisticsHandler>();
-            }
-            
-            if (_handler != null && _gunOrigin == null)
-            {
-                _gunOrigin = _handler.Origin;
-            }
+            if (_handler == null) _handler = GetComponent<BallisticsHandler>();
+            if (_handler == null) _handler = FindAnyObjectByType<BallisticsHandler>();
         }
         private void Update()
         {
-            if (_lineRenderer != null)
-            {
-                DrawVectors();
-                RenderTrajectory();
-            }
+            if (_lineRenderer == null || _handler == null) return;
+
+            RenderTrajectory();
+
+            if (_drawBaseVectors) DrawDebugVectors();
         }
         private void RenderTrajectory()
         {
-            if (_handler != null)
-            {
-                _corners.Clear();
-                var corners = _handler.Trajectory;
-                for (int i = 0; i < corners.Count; i++)
-                {
-                    Vector3 origin = _gunOrigin.position;
-                    origin.y = 0;
-                    Vector3 newCorner = origin + _handler.StraightVector * (float)corners[i].X + Vector3.up * (float)corners[i].Y + _handler.RightVector * (float)corners[i].Z;
+            var trajectory = _handler.Trajectory;
+            int count = trajectory.Count;
 
-                    _corners.Add(newCorner);
-                }
-                _lineRenderer.positionCount = _corners.Count;
-                _lineRenderer.SetPositions(_corners.ToArray());
-
-                if (_showDistance) if (_corners.Count > 0) Debug.Log(corners[corners.Count - 1].X);
-            }
-            else
+            if (count < 2)
             {
-                Debug.LogWarning("You need to assign RK Handler!");
+                _lineRenderer.positionCount = 0;
+                return;
             }
+
+            if (_positions.Length != count)
+            {
+                _positions = new Vector3[count];
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                _positions[i] = trajectory[i].Position;
+            }
+
+            _lineRenderer.positionCount = count;
+            _lineRenderer.SetPositions(_positions);
         }
 
-        private void DrawVectors()
+        private void DrawDebugVectors()
         {
-            if (_gunOrigin != null && _handler != null && _drawBaseVectors)
-            {
-                Debug.DrawLine(_gunOrigin.position, _gunOrigin.position + _handler.DirectionVector, Color.blue);
-                Debug.DrawLine(_gunOrigin.position, _gunOrigin.position + Vector3.up, Color.yellow);
+            Transform origin = _handler.Origin;
+            if (origin == null) return;
 
-                Debug.DrawLine(_gunOrigin.position, _gunOrigin.position + _handler.StraightVector, Color.red);
-                Debug.DrawLine(_gunOrigin.position, _gunOrigin.position + _handler.RightVector, Color.green);
-            }
+            Debug.DrawRay(origin.position, origin.forward * 2f, Color.blue);
+
+            Debug.DrawRay(origin.position, Vector3.up * 2f, Color.yellow);
         }
         #endregion
     }

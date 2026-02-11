@@ -5,7 +5,7 @@ namespace BallisticsSimulation
     public class EulerIntegrator : IIntegrator
     {
         public List<State> Calculate(in State initState,
-            double step,
+            float step,
             int maxSteps,
             BallisticsHandler handler,
             double eps = 1e-4,
@@ -15,21 +15,17 @@ namespace BallisticsSimulation
             List<State> trajectory = new List<State>();
             int counter = 0;
 
-            State state = new State(initState);
+            State state = initState;
             trajectory.Add(state);
 
-            while (counter < maxSteps && state.Y >= 0.0)
+            while (counter < maxSteps && state.Position.y >= -1.0)
             {
                 State a = handler.Derivatives(state);
 
                 State delta = a * step;
                 state = state + delta;
+                trajectory.Add(state);
 
-                if (state.Y < 0)
-                {
-                    break;
-                }
-                trajectory.Add(new State(state));
                 counter++;
             }
             return trajectory;

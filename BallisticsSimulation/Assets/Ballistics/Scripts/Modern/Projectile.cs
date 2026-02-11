@@ -7,34 +7,25 @@ namespace BallisticsSimulation
 {
     public class Projectile : MonoBehaviour
     {
-        private BallisticsHandler _solver;
-        private Vector3 _originPos;
-        private Vector3 _straight;
-        private Vector3 _right;
         private List<State> _path;
         [SerializeField] private GameObject _explosionEffect;
         public event EventHandler<ProjectileHitEventArgs> OnHit;
 
         public void Init(BallisticsHandler solver, float lifeTime)
         {
-            _solver = solver;
-            _straight = _solver.StraightVector;
-            _right = _solver.RightVector;
-            _originPos = new Vector3(
-                solver.Origin.position.x,
-                solver.Origin.position.y,
-                solver.Origin.position.z
-                );
+            _path = new List<State>(solver.GetTrajectory());
 
-            _path = new List<State>(_solver.GetTrajectory());
+            if (_path.Count > 0)
+            {
+                StartCoroutine(Fly());
+            }
 
-            StartCoroutine(Fly());
             Destroy(gameObject, lifeTime);
         }
 
         private IEnumerator Fly()
         {
-            var path = new List<State>(_solver.GetTrajectory());
+            var path = _path;
             if (path == null || path.Count < 2) yield break;
 
             float simTime = 0f;
@@ -53,22 +44,16 @@ namespace BallisticsSimulation
                 float t1 = (float)path[seg + 1].T;
                 float k = Mathf.InverseLerp(t0, t1, simTime);
 
-                Vector3 p0 = LocalToWorld(path[seg]);
-                Vector3 p1 = LocalToWorld(path[seg + 1]);
+                Vector3 p0 = path[seg].Position;
+                Vector3 p1 = path[seg + 1].Position;
 
                 transform.position = Vector3.Lerp(p0, p1, k);
                 Vector3 dir = (p1 - p0).normalized;
-                if (dir.sqrMagnitude > 0f)
-                    transform.rotation = Quaternion.LookRotation(dir, Vector3.up);
+                if (dir.sqrMagnitude > 0.001f)
+                    transform.rotation = Quaternion.LookRotation(dir);
 
                 yield return null;
             }
-
-            Vector3 LocalToWorld(State s) =>
-                (new Vector3(_originPos.x, 0, _originPos.z)) +
-                _straight * (float)s.X
-              + Vector3.up * (float)s.Y
-              + _right * (float)s.Z;
         }
 
         private void OnTriggerEnter(Collider other)

@@ -16,9 +16,8 @@ namespace BallisticsSimulation
         [Header("Integrator")]
         [SerializeField] private IntegrationMethod _integrationMethod;
         [SerializeField] private bool _runtimeCalculate = true;
-        [SerializeField] private double stepSize = 0.1f;
+        [SerializeField] private float stepSize = 0.1f;
         [SerializeField] private int maxSteps = 10000;
-        [SerializeField] private bool _enableLog = false;
         private IIntegrator _integrator;
         
 
@@ -108,7 +107,8 @@ namespace BallisticsSimulation
 
         private float GustValue(double t)
         {
-            float u = (float)(gustFreq * t);
+            float globalOffset = Time.time;
+            float u = (float)(gustFreq * (t + globalOffset));
 
             return gustSigma * (2f * Mathf.PerlinNoise(gustSeed, u) - 1f);
         }
@@ -117,7 +117,7 @@ namespace BallisticsSimulation
         {
             Vector3 dir = (_windZone != null ? _windZone.transform.forward : Vector3.right).normalized;
 
-            float h = Mathf.Max(0f, (float)s.Y);
+            float h = Mathf.Max(0f, (float)s.Position.y);
             float Umean = LayeredMean(h);
             float Ugust = GustValue(s.T);
 
@@ -194,64 +194,20 @@ namespace BallisticsSimulation
         #endregion
 
         #region Core math
-        private void RecordLog()
+        public void Recalculate(Vector3 initialVelocity)
         {
-            List<string> logData = new List<string>();
-            logData.Add("x,y,vx,vy,t");
-
-            for (int i = 0; i < _trajectory.Count; i++)
-            {
-                var currentCorner = _trajectory[i];
-                string line = string.Format("{0:F3},{1:F3},{2:F3},{3:F3},{4:F3}",
-                    currentCorner.X,
-                    currentCorner.Y,
-                    currentCorner.Vx,
-                    currentCorner.Vy,
-                    currentCorner.T
-                    );
-                logData.Add(line);
-            }
-            if (logData.Count > 0)
-            {
-                string fileName = string.Empty;
-                if (_integrationMethod == IntegrationMethod.Euler) fileName = "sim_Euler.csv";
-                else if (_integrationMethod == IntegrationMethod.RK4) fileName = "sim_RK4.csv";
-                else if (_integrationMethod == IntegrationMethod.RKF45) fileName = "sim_RKF45.csv";
-
-                string filePath = Path.Combine(Application.dataPath, fileName);
-                File.WriteAllLines(filePath, logData.ToArray());
-                Debug.Log("CSV file was created at: " + filePath);
-            }
-
-            
+            _trajectory.Clear();
+            State state = new State(_origin.position, initialVelocity, 0.0);
+            _integrator = Create(_integrationMethod);
+            _trajectory.AddRange(_integrator.Calculate(state, stepSize, maxSteps, this, eps, hMin, hMax));
         }
         private void Recalculate()
         {
-            _trajectory.Clear();
-            double angleRad = GetAngle();
+            Vector3 muzzleVel = _origin.forward * (float)_ballisticsProps.startSpeed;
 
-            State state = new State(
-                0, _origin.position.y, 0,
-                _ballisticsProps.startSpeed * Math.Cos(angleRad),
-                _ballisticsProps.startSpeed * Math.Sin(angleRad),
-                0, 0
-            );
+            Vector3 vehicleVel = GetComponentInParent<Rigidbody>()?.velocity ?? Vector3.zero;
 
-            _integrator = Create(_integrationMethod);
-            _trajectory.AddRange(_integrator.Calculate(state,
-                stepSize,
-                maxSteps,
-                this,
-                eps,
-                hMin,
-                hMax
-                ));
-
-            if (_enableLog)
-            {
-                RecordLog();
-            }
-            Debug.Log("Recalculated");
+            Recalculate(muzzleVel + vehicleVel);
         }
         private void FixedUpdate()
         {
@@ -275,41 +231,34 @@ namespace BallisticsSimulation
         }
         public State Derivatives(State s)
         {
-            if (_ballisticsProps.mass == 0) _ballisticsProps.mass = 0.001;
+            float mass = Mathf.Max(0.0001f, (float)_ballisticsProps.mass);
 
-            Vector3 vWorld = _straightVector * (float)s.Vx
-                           + Vector3.up * (float)s.Vy
-                           + _rightVector * (float)s.Vz;
+            Vector3 wind = _ballisticsProps.useWind ? GetWind(s) : Vector3.zero;
+            Vector3 vRel = s.Velocity - wind;
+            float vMag = vRel.magnitude;
 
-            Vector3 vRel = vWorld - (_ballisticsProps.useWind ? GetWind(s) : Vector3.zero);
-
-            double vMag = vRel.magnitude;
-            float density = Density((float)s.Y);
-            double dragFactor = density
-                              * _ballisticsProps.dragCoefficent
-                              * _ballisticsProps.area * 0.5;
-
-            Vector3 dragAcc = _ballisticsProps.useDrag
-                            ? -(float)(dragFactor / _ballisticsProps.mass) * (float)vMag * vRel
-                            : Vector3.zero;
-
-            Vector3 gravity = _ballisticsProps.useGravity ? Gravity((float)s.Y) : Vector3.zero;
-            Vector3 accWorld = gravity + dragAcc;
-
-            if (_ballisticsProps.useThrust &&
-    s.T > _ballisticsProps.IgnitionTime &&
-    s.T < _ballisticsProps.IgnitionTime + _ballisticsProps.BurnTime)
+            Vector3 dragAcc = Vector3.zero;
+            if (_ballisticsProps.useDrag && vMag > 0.001f)
             {
-                Vector3 dir = vWorld.sqrMagnitude > 1e-6f ? vWorld.normalized : _straightVector;
-                Vector3 thrustAcc = (float)(_ballisticsProps.thrustForce / _ballisticsProps.mass) * dir;
-                accWorld += thrustAcc;
+                float density = Density(s.Position.y);
+                double dragFactor = density * _ballisticsProps.dragCoefficent * _ballisticsProps.area * 0.5;
+                dragAcc = -(float)(dragFactor / mass) * vMag * vRel;
             }
 
-            double ax = Vector3.Dot(accWorld, _straightVector);
-            double ay = Vector3.Dot(accWorld, Vector3.up);
-            double az = Vector3.Dot(accWorld, _rightVector);
+            Vector3 gravity = _ballisticsProps.useGravity ? Gravity(s.Position.y) : Vector3.zero;
 
-            return new State(s.Vx, s.Vy, s.Vz, ax, ay, az, 1.0);
+            Vector3 thrustAcc = Vector3.zero;
+            if (_ballisticsProps.useThrust &&
+                s.T >= _ballisticsProps.IgnitionTime &&
+                s.T <= _ballisticsProps.IgnitionTime + _ballisticsProps.BurnTime)
+            {
+                Vector3 thrustDir = s.Velocity.sqrMagnitude > 1e-6f ? s.Velocity.normalized : _origin.forward;
+                thrustAcc = (float)(_ballisticsProps.thrustForce / mass) * thrustDir;
+            }
+
+            Vector3 totalAcc = gravity + dragAcc + thrustAcc;
+
+            return new State(s.Velocity, totalAcc, 1.0);
         }
         private Vector3 Gravity(float h)
         {

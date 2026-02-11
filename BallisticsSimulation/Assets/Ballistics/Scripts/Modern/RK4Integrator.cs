@@ -7,7 +7,7 @@ namespace BallisticsSimulation
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public List<State> Calculate(in State initState,
-            double step,
+            float step,
             int maxSteps,
             BallisticsHandler handler,
             double eps = 1e-4,
@@ -17,27 +17,21 @@ namespace BallisticsSimulation
             List<State> trajectory = new List<State>();
             int counter = 0;
 
-            State state = new State(initState);
-            trajectory.Add(new State(state));
+            State state = initState;
+            trajectory.Add(state);
 
-            while (counter < maxSteps && state.Y >= 0.0)
+            while (counter < maxSteps && state.Position.y >= -1.0)
             {
                 State k1 = handler.Derivatives(state);
                 State k2 = handler.Derivatives(state + (k1 * (step * 0.5)));
                 State k3 = handler.Derivatives(state + (k2 * (step * 0.5)));
                 State k4 = handler.Derivatives(state + (k3 * (step)));
 
-                State delta = (k1 + (k2 * (2))
-                                 + (k3 * (2))
-                                 + (k4))
-                                * (step / 6.0);
+                State delta = (k1 + (k2 * 2.0) + (k3 * 2.0) + k4) * (step / 6.0);
 
-                if (state.Y < 0)
-                {
-                    break;
-                }
-                state = state.Add(delta);
-                trajectory.Add(new State(state));
+                state = state + delta;
+                trajectory.Add(state);
+
                 counter++;
             }
             return trajectory;

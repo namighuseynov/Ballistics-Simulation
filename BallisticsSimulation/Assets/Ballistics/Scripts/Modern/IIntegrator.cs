@@ -6,7 +6,7 @@ namespace BallisticsSimulation
     {
         public List<State> Calculate(
             in State initState, 
-            double step, 
+            float step, 
             int maxSteps, 
             BallisticsHandler handler,
             double eps = 1e-4, 
